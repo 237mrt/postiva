@@ -176,23 +176,32 @@ function App() {
 
   const playNotificationSound = useCallback(async () => {
     if (!settings?.notificationSoundEnabled) {
+      console.log('[Postiva] Bildirim sesi ayarlardan kapalı.')
+
       return
     }
 
     const audio = notificationAudioRef.current
 
     if (!audio) {
+      console.warn('[Postiva] Bildirim ses dosyası henüz hazır değil.')
+
       return
     }
 
     try {
+      audio.pause()
       audio.currentTime = 0
 
+      audio.volume = Math.min(1, Math.max(0, Number(settings.notificationVolume ?? 0.45)))
+
       await audio.play()
+
+      console.log('[Postiva] Özel bildirim sesi çalındı.')
     } catch (error) {
-      console.warn('[Postiva] Bildirim sesi oynatılamadı:', error)
+      console.error('[Postiva] Bildirim sesi çalınamadı:', error)
     }
-  }, [settings?.notificationSoundEnabled])
+  }, [settings?.notificationSoundEnabled, settings?.notificationVolume])
 
   useEffect(() => {
     if (isLoading || isSettingsLoading || !settings?.notificationsEnabled) {
@@ -264,6 +273,7 @@ function App() {
          * Windows bildirimini göster.
          */
         try {
+          void playNotificationSound()
           if (!window.api?.notifications?.show) {
             throw new Error('Bildirim API bağlantısı bulunamadı.')
           }
