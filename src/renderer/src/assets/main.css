@@ -4186,3 +4186,322 @@ body {
   color: #3c1724;
   background: #efa5c4;
 }
+
+/* ========================================
+   SIDEBAR PIXEL KEDİ
+======================================== */
+
+.sidebar-cat-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin: 13px 0 10px;
+}
+
+.sidebar-cat-container {
+  position: relative;
+
+  width: 76px;
+  height: 61px;
+
+  cursor: default;
+
+  transition:
+    transform 180ms ease,
+    filter 180ms ease;
+}
+
+.sidebar-cat-container:hover {
+  transform: translateY(-3px);
+  filter: drop-shadow(0 5px 8px rgba(202, 173, 255, 0.15));
+}
+
+.sidebar-pixel-cat {
+  position: relative;
+  z-index: 2;
+
+  display: block;
+
+  width: 72px;
+  height: 56px;
+
+  image-rendering: pixelated;
+}
+
+.pixel-cat-outline {
+  fill: #7561a8;
+}
+
+.pixel-cat-fur {
+  fill: #d9caff;
+}
+
+.pixel-cat-ear {
+  fill: #ef9bc5;
+}
+
+.pixel-cat-feature {
+  fill: #1c1a31;
+}
+
+.pixel-cat-cheek {
+  fill: #f2a5c9;
+}
+
+.pixel-cat-nose {
+  fill: #e879ad;
+}
+
+.sidebar-cat-shadow {
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  left: 50%;
+
+  width: 49px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: rgba(8, 8, 20, 0.45);
+
+  transform: translateX(-50%);
+}
+
+/* ========================================
+   GELİŞTİRİCİ İMZASI
+======================================== */
+
+.right-panel-developer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+
+  width: 100%;
+  margin-top: 12px;
+  padding-top: 9px;
+
+  font-family: 'Press Start 2P', monospace;
+}
+
+.right-panel-developer-line {
+  flex: 1;
+
+  height: 1px;
+
+  background: linear-gradient(90deg, transparent, rgba(169, 143, 222, 0.3));
+}
+
+.right-panel-developer-label {
+  color: #9182b2;
+
+  font-size: 6px;
+  letter-spacing: 0.4px;
+}
+
+.right-panel-developer-name {
+  color: #ef9bc5;
+
+  font-size: 7px;
+  letter-spacing: 0.5px;
+
+  text-shadow: 1px 1px 0 rgba(74, 54, 105, 0.8);
+}
+
+/* ========================================
+   EKRANDA GEZEN PIXEL KEDİ
+======================================== */
+
+.floating-cat {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+
+  width: 76px;
+  height: 61px;
+
+  padding: 0;
+  margin: 0;
+
+  border: 0;
+  outline: 0;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  user-select: none;
+  touch-action: none;
+
+  pointer-events: auto;
+
+  will-change: transform;
+
+  /*
+   * Electron sürükleme alanlarının içinde
+   * kedinin tıklanabilmesini sağlar.
+   */
+  -webkit-app-region: no-drag;
+}
+
+.floating-cat:focus-visible {
+  border-radius: 12px;
+
+  outline: 2px dashed rgba(239, 155, 197, 0.7);
+
+  outline-offset: 4px;
+}
+
+.floating-cat .sidebar-cat-container {
+  margin: 0;
+
+  transition: filter 180ms ease;
+}
+
+.floating-cat:hover .sidebar-cat-container {
+  filter: drop-shadow(0 5px 7px rgba(216, 202, 255, 0.23));
+}
+
+/* Kedi sola yürürken ters döner */
+
+.floating-cat-facing-left .sidebar-pixel-cat {
+  transform: scaleX(-1);
+}
+
+.floating-cat-facing-right .sidebar-pixel-cat {
+  transform: scaleX(1);
+}
+
+/* Yürüme animasyonu */
+
+.floating-cat-walking .sidebar-cat-container {
+  animation: floating-cat-walk 480ms steps(2, end) infinite;
+}
+
+/* Fareyi fark ettiğinde */
+
+.floating-cat-curious .sidebar-cat-container {
+  animation: floating-cat-curious 620ms ease-in-out infinite alternate;
+}
+
+/* Tıklanarak sevildiğinde */
+
+.floating-cat-happy .sidebar-cat-container {
+  animation: floating-cat-happy 420ms ease-in-out infinite alternate;
+}
+
+.floating-cat-status {
+  position: absolute;
+  top: -9px;
+  right: 3px;
+
+  min-width: 14px;
+
+  color: #f2a5c9;
+
+  font-family: 'Press Start 2P', monospace;
+
+  font-size: 9px;
+
+  text-shadow: 1px 1px 0 #302744;
+}
+
+/* Kalp patlaması */
+
+.floating-cat-hearts {
+  position: absolute;
+  top: 3px;
+  left: 50%;
+
+  width: 45px;
+  height: 30px;
+
+  pointer-events: none;
+
+  transform: translateX(-50%);
+}
+
+.floating-cat-hearts span {
+  position: absolute;
+
+  color: #f2a5c9;
+
+  font-family: 'Press Start 2P', monospace;
+
+  font-size: 10px;
+
+  opacity: 0;
+
+  animation: floating-cat-heart 1200ms ease-out forwards;
+}
+
+.floating-cat-hearts span:nth-child(1) {
+  left: 4px;
+  animation-delay: 0ms;
+}
+
+.floating-cat-hearts span:nth-child(2) {
+  left: 18px;
+  animation-delay: 100ms;
+}
+
+.floating-cat-hearts span:nth-child(3) {
+  right: 2px;
+  animation-delay: 180ms;
+}
+
+@keyframes floating-cat-walk {
+  0% {
+    transform: translateY(0) rotate(-1deg);
+  }
+
+  100% {
+    transform: translateY(-3px) rotate(1deg);
+  }
+}
+
+@keyframes floating-cat-curious {
+  0% {
+    transform: translateY(0) rotate(-2deg);
+  }
+
+  100% {
+    transform: translateY(-4px) rotate(3deg);
+  }
+}
+
+@keyframes floating-cat-happy {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+
+  100% {
+    transform: translateY(-5px) scale(1.06);
+  }
+}
+
+@keyframes floating-cat-heart {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.5);
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-28px) scale(1.2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-cat .sidebar-cat-container,
+  .floating-cat-hearts span {
+    animation: none;
+  }
+}

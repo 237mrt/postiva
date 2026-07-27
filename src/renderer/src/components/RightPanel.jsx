@@ -153,14 +153,12 @@ function RightPanel({
         )}
       </section>
 
-      <div className="focus-card">
-        <span>🌱</span>
+      <div className="right-panel-developer">
+        <span className="right-panel-developer-line" />
 
-        <p>
-          Planlı günler,
-          <br />
-          huzurlu geceler getirir.
-        </p>
+        <span className="right-panel-developer-label">DEV BY</span>
+
+        <strong className="right-panel-developer-name">237MRT</strong>
       </div>
     </aside>
   )

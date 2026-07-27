@@ -10,6 +10,7 @@ import BoardModal from './components/BoardModal'
 import ToastNotification from './components/ToastNotification'
 import notificationSound from './assets/sounds/postiva-notification.mp3'
 import SettingsView from './components/SettingsView'
+import FloatingCat from './components/FloatingCat'
 
 const INITIAL_CURRENT_TIME = Date.now()
 
@@ -1379,6 +1380,8 @@ function App() {
           onCancel={cancelPermanentDelete}
         />
       )}
+
+      <FloatingCat />
     </div>
   )
 }

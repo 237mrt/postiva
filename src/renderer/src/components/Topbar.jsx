@@ -34,14 +34,6 @@ function Topbar({
           + Yeni Not
         </button>
       )}
-
-      <button className="topbar-icon" type="button" aria-label="Görünümü değiştir">
-        ▦
-      </button>
-
-      <button className="topbar-icon" type="button" aria-label="Ayarlar">
-        ⚙
-      </button>
     </header>
   )
 }

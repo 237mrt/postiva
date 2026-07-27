@@ -129,8 +129,6 @@ function Sidebar({
       </section>
 
       <div className="sidebar-decoration">
-        <div className="pixel-cat">ฅ^•ﻌ•^ฅ</div>
-
         <div className="speech-bubble">Notlarını unutma! ♥</div>
       </div>
     </aside>
