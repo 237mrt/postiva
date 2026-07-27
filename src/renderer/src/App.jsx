@@ -232,7 +232,15 @@ function App() {
   ]);
 
   const filteredNotes = useMemo(() => {
-    return searchNotes(currentViewNotes, searchQuery);
+    const searchedNotes = searchNotes(currentViewNotes, searchQuery);
+
+    return [...searchedNotes].sort((firstNote, secondNote) => {
+      if (firstNote.isPinned !== secondNote.isPinned) {
+        return Number(secondNote.isPinned) - Number(firstNote.isPinned);
+      }
+
+      return new Date(secondNote.updatedAt) - new Date(firstNote.updatedAt);
+    });
   }, [currentViewNotes, searchQuery]);
 
   const filteredDeletedNotes = useMemo(() => {
@@ -471,6 +479,30 @@ function App() {
     }
   };
 
+  const toggleNotePinned = async (note) => {
+    setAppError("");
+
+    try {
+      ensureNotesApi();
+
+      const response = await window.api.notes.update(note.id, {
+        isPinned: !note.isPinned,
+      });
+
+      const updatedNote = unwrapResponse(response);
+
+      setNotes((currentNotes) =>
+        currentNotes.map((item) =>
+          item.id === updatedNote.id ? updatedNote : item,
+        ),
+      );
+    } catch (error) {
+      console.error("[Postiva] Not sabitlenemedi:", error);
+
+      setAppError(error.message);
+    }
+  };
+
   const requestDeleteNote = (note) => {
     setNotePendingDelete(note);
   };
@@ -652,6 +684,7 @@ function App() {
             onNewNote={openNewNoteModal}
             onEdit={openEditNoteModal}
             onToggleComplete={toggleNoteCompleted}
+            onTogglePin={toggleNotePinned}
           />
         )}
       </main>

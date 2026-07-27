@@ -3417,3 +3417,94 @@ body {
   background: rgba(157, 140, 255, 0.1);
   border-color: rgba(157, 140, 255, 0.2);
 }
+
+/* ========================================
+   NOT SABİTLEME
+======================================== */
+
+.sticky-note-actions {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.pin-note-button {
+  display: grid;
+
+  width: 29px;
+  height: 29px;
+  padding: 0;
+
+  cursor: pointer;
+  place-items: center;
+
+  color: rgba(35, 31, 50, 0.65);
+  background: transparent;
+
+  border: 1px solid transparent;
+  border-radius: 8px;
+
+  font-size: 15px;
+
+  opacity: 0.55;
+
+  transition:
+    opacity 150ms ease,
+    transform 150ms ease,
+    background 150ms ease;
+}
+
+.pin-note-button:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+
+  background: rgba(
+    255,
+    255,
+    255,
+    0.22
+  );
+}
+
+.pin-note-button.active {
+  opacity: 1;
+  transform: rotate(-8deg);
+
+  background: rgba(
+    255,
+    255,
+    255,
+    0.28
+  );
+}
+
+.sticky-note-pinned {
+  box-shadow:
+    0 13px 25px
+      rgba(0, 0, 0, 0.22),
+    0 0 0 2px
+      rgba(255, 255, 255, 0.18);
+}
+
+.sticky-note-pinned::before {
+  content: "SABİT";
+
+  position: absolute;
+  top: -9px;
+  left: 14px;
+
+  padding: 3px 7px;
+
+  color: #ded8ff;
+  background: #343149;
+
+  border: 1px solid
+    rgba(183, 169, 255, 0.45);
+  border-radius: 5px;
+
+  font-family:
+    "Press Start 2P",
+    monospace;
+  font-size: 6px;
+  line-height: 1;
+}

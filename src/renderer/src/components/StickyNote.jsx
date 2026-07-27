@@ -1,4 +1,4 @@
-function StickyNote({ note, board, onEdit, onToggleComplete }) {
+function StickyNote({ note, board, onEdit, onToggleComplete, onTogglePin }) {
   const contentItems = Array.isArray(note.content)
     ? note.content
     : String(note.content ?? "")
@@ -11,10 +11,12 @@ function StickyNote({ note, board, onEdit, onToggleComplete }) {
       label: "Düşük",
       icon: "🌱",
     },
+
     normal: {
       label: "Normal",
       icon: "⭐",
     },
+
     high: {
       label: "Yüksek",
       icon: "🔥",
@@ -23,44 +25,86 @@ function StickyNote({ note, board, onEdit, onToggleComplete }) {
 
   const priority = priorityLabels[note.priority] ?? priorityLabels.normal;
 
-  const formattedDueDate = note.dueDate
-    ? new Intl.DateTimeFormat("tr-TR", {
-        day: "2-digit",
-        month: "short",
-        hour: "2-digit",
-        minute: "2-digit",
-      }).format(new Date(note.dueDate))
-    : null;
+  const getFormattedDueDate = () => {
+    if (!note.dueDate) {
+      return null;
+    }
+
+    const dueDate = new Date(note.dueDate);
+
+    if (Number.isNaN(dueDate.getTime())) {
+      return null;
+    }
+
+    return new Intl.DateTimeFormat("tr-TR", {
+      day: "2-digit",
+      month: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(dueDate);
+  };
+
+  const formattedDueDate = getFormattedDueDate();
+
+  const handleEdit = (event) => {
+    event?.stopPropagation();
+    onEdit(note);
+  };
+
+  const handleTogglePin = (event) => {
+    event.stopPropagation();
+    onTogglePin(note);
+  };
+
+  const handleToggleComplete = (event) => {
+    event.stopPropagation();
+    onToggleComplete(note);
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      onEdit(note);
+    }
+  };
 
   return (
     <article
       className={`sticky-note sticky-note-${note.color} ${
         note.isCompleted ? "sticky-note-completed" : ""
-      }`}
-      onClick={() => onEdit(note)}
+      } ${note.isPinned ? "sticky-note-pinned" : ""}`}
+      onClick={handleEdit}
+      onKeyDown={handleKeyDown}
       role="button"
       tabIndex={0}
-      onKeyDown={(event) => {
-        if (event.key === "Enter") {
-          onEdit(note);
-        }
-      }}
     >
       <div className="note-tape" />
 
       <div className="note-header">
         <h3>{note.title}</h3>
 
-        <button
-          type="button"
-          aria-label={`${note.title} notunu düzenle`}
-          onClick={(event) => {
-            event.stopPropagation();
-            onEdit(note);
-          }}
-        >
-          •••
-        </button>
+        <div className="sticky-note-actions">
+          <button
+            type="button"
+            className={`pin-note-button ${note.isPinned ? "active" : ""}`}
+            onClick={handleTogglePin}
+            aria-label={
+              note.isPinned ? "Notun sabitlemesini kaldır" : "Notu sabitle"
+            }
+            title={note.isPinned ? "Sabitlemeyi kaldır" : "Notu sabitle"}
+          >
+            {note.isPinned ? "📌" : "📍"}
+          </button>
+
+          <button
+            type="button"
+            className="edit-note-button"
+            aria-label={`${note.title} notunu düzenle`}
+            title="Notu düzenle"
+            onClick={handleEdit}
+          >
+            •••
+          </button>
+        </div>
       </div>
 
       <div className="note-meta">
@@ -70,8 +114,11 @@ function StickyNote({ note, board, onEdit, onToggleComplete }) {
             <p>{board.name}</p>
           </div>
         )}
+
         <span
-          className={`priority-badge priority-badge-${note.priority ?? "normal"}`}
+          className={`priority-badge priority-badge-${
+            note.priority ?? "normal"
+          }`}
         >
           {priority.icon} {priority.label}
         </span>
@@ -97,15 +144,12 @@ function StickyNote({ note, board, onEdit, onToggleComplete }) {
           className={`complete-note-button ${
             note.isCompleted ? "completed" : ""
           }`}
-          onClick={(event) => {
-            event.stopPropagation();
-            onToggleComplete(note);
-          }}
+          onClick={handleToggleComplete}
         >
           {note.isCompleted ? "✓ Tamamlandı" : "○ Tamamla"}
         </button>
 
-        <strong>{note.isCompleted ? "✨" : note.decoration}</strong>
+        <strong>{note.isCompleted ? "✨" : (note.decoration ?? "✦")}</strong>
       </div>
     </article>
   );

@@ -15,6 +15,7 @@ function NotesView({
   onNewNote,
   onEdit,
   onToggleComplete,
+  onTogglePin,
 }) {
   const isSearching = Boolean(searchQuery.trim());
 
@@ -75,6 +76,7 @@ function NotesView({
                 board={board}
                 onEdit={onEdit}
                 onToggleComplete={onToggleComplete}
+                onTogglePin={onTogglePin}
               />
             );
           })}
