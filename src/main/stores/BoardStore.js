@@ -91,7 +91,33 @@ class BoardStore {
   async writeData(data) {
     const jsonContent = JSON.stringify(data, null, 2)
 
-    await fs.writeFile(this.filePath, jsonContent, 'utf8')
+    const temporaryFilePath = `${this.filePath}.tmp`
+
+    try {
+      /*
+       * Önce pano verilerini geçici dosyaya yazıyoruz.
+       */
+      await fs.writeFile(temporaryFilePath, jsonContent, 'utf8')
+
+      /*
+       * Yazma tamamlandıktan sonra geçici dosyayı
+       * gerçek boards.json dosyasının yerine geçiriyoruz.
+       */
+      await fs.rename(temporaryFilePath, this.filePath)
+    } catch (error) {
+      /*
+       * Hata oluşursa yarım kalan geçici dosyayı temizliyoruz.
+       */
+      try {
+        await fs.rm(temporaryFilePath, {
+          force: true
+        })
+      } catch {
+        // Geçici dosya yoksa temizleme gerekmez.
+      }
+
+      throw error
+    }
   }
 
   async getAllBoards() {

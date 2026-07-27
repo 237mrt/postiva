@@ -2,6 +2,7 @@ function SettingsView({
   settings,
   isLoading = false,
   isBackupRestoring = false,
+  backupFeedback,
   onToggleNotifications,
   onToggleNotificationSound,
   onNotificationVolumeChange,
@@ -184,6 +185,17 @@ function SettingsView({
 
             <span className="settings-card-icon">💾</span>
           </div>
+
+          {backupFeedback && (
+            <div
+              className={`settings-feedback settings-feedback-${backupFeedback.type}`}
+              role="status"
+            >
+              <span>{backupFeedback.type === 'success' ? '✓' : '!'}</span>
+
+              <p>{backupFeedback.message}</p>
+            </div>
+          )}
 
           <div className="settings-option">
             <div>

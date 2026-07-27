@@ -226,9 +226,7 @@ button {
   display: flex;
   min-width: 0;
   flex-direction: column;
-  background:
-    radial-gradient(circle at 1px 1px, #31324d 1px, transparent 1px),
-    #111221;
+  background: radial-gradient(circle at 1px 1px, #31324d 1px, transparent 1px), #111221;
   background-size: 20px 20px;
 }
 
@@ -686,12 +684,7 @@ button {
 }
 
 body {
-  background:
-    radial-gradient(
-      circle at top,
-      #24223d 0%,
-      #121321 55%
-    );
+  background: radial-gradient(circle at top, #24223d 0%, #121321 55%);
 }
 
 /* Ana yerleşim */
@@ -703,12 +696,7 @@ body {
 /* Sol menü */
 
 .sidebar {
-  background:
-    linear-gradient(
-      180deg,
-      #1d1e34 0%,
-      #17182a 100%
-    );
+  background: linear-gradient(180deg, #1d1e34 0%, #17182a 100%);
 
   border-right: 1px solid rgba(157, 140, 255, 0.18);
 }
@@ -746,12 +734,7 @@ body {
 }
 
 .navigation-item.active {
-  background:
-    linear-gradient(
-      135deg,
-      rgba(136, 113, 236, 0.9),
-      rgba(104, 88, 199, 0.9)
-    );
+  background: linear-gradient(135deg, rgba(136, 113, 236, 0.9), rgba(104, 88, 199, 0.9));
 
   border-color: rgba(192, 180, 255, 0.55);
 
@@ -793,16 +776,8 @@ body {
 
 .workspace {
   background:
-    radial-gradient(
-      circle at 1px 1px,
-      rgba(163, 152, 216, 0.13) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      145deg,
-      #151625,
-      #11121f
-    );
+    radial-gradient(circle at 1px 1px, rgba(163, 152, 216, 0.13) 1px, transparent 1px),
+    linear-gradient(145deg, #151625, #11121f);
 
   background-size:
     22px 22px,
@@ -833,23 +808,16 @@ body {
 .search-box:focus-within {
   border-color: rgba(157, 140, 255, 0.65);
 
-  box-shadow:
-    0 0 0 3px rgba(157, 140, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(157, 140, 255, 0.08);
 }
 
 .new-note-button {
   border: 1px solid rgba(208, 198, 255, 0.5);
   border-radius: 10px;
 
-  background:
-    linear-gradient(
-      135deg,
-      #8e7bea,
-      #6f60ca
-    );
+  background: linear-gradient(135deg, #8e7bea, #6f60ca);
 
-  box-shadow:
-    0 7px 18px rgba(68, 51, 155, 0.3);
+  box-shadow: 0 7px 18px rgba(68, 51, 155, 0.3);
 
   transition:
     transform 150ms ease,
@@ -859,8 +827,7 @@ body {
 .new-note-button:hover {
   transform: translateY(-2px);
 
-  box-shadow:
-    0 10px 24px rgba(68, 51, 155, 0.36);
+  box-shadow: 0 10px 24px rgba(68, 51, 155, 0.36);
 }
 
 .topbar-icon {
@@ -943,57 +910,27 @@ body {
 }
 
 .sticky-note-purple {
-  background:
-    linear-gradient(
-      145deg,
-      #c7b8ff,
-      #aa98ed
-    );
+  background: linear-gradient(145deg, #c7b8ff, #aa98ed);
 }
 
 .sticky-note-yellow {
-  background:
-    linear-gradient(
-      145deg,
-      #ffe9a0,
-      #f3ce6d
-    );
+  background: linear-gradient(145deg, #ffe9a0, #f3ce6d);
 }
 
 .sticky-note-pink {
-  background:
-    linear-gradient(
-      145deg,
-      #ffbad3,
-      #ee94b9
-    );
+  background: linear-gradient(145deg, #ffbad3, #ee94b9);
 }
 
 .sticky-note-blue {
-  background:
-    linear-gradient(
-      145deg,
-      #b4ddff,
-      #84bce9
-    );
+  background: linear-gradient(145deg, #b4ddff, #84bce9);
 }
 
 .sticky-note-green {
-  background:
-    linear-gradient(
-      145deg,
-      #b5ebca,
-      #83cfa3
-    );
+  background: linear-gradient(145deg, #b5ebca, #83cfa3);
 }
 
 .sticky-note-orange {
-  background:
-    linear-gradient(
-      145deg,
-      #ffc594,
-      #eea066
-    );
+  background: linear-gradient(145deg, #ffc594, #eea066);
 }
 
 .empty-note {
@@ -1028,26 +965,15 @@ body {
   border: 1px dashed rgba(157, 140, 255, 0.32);
   border-radius: 12px;
 
-  background:
-    linear-gradient(
-      135deg,
-      rgba(35, 36, 65, 0.85),
-      rgba(24, 25, 47, 0.85)
-    );
+  background: linear-gradient(135deg, rgba(35, 36, 65, 0.85), rgba(24, 25, 47, 0.85));
 
-  box-shadow:
-    0 10px 24px rgba(5, 5, 15, 0.22);
+  box-shadow: 0 10px 24px rgba(5, 5, 15, 0.22);
 }
 
 /* Sağ panel */
 
 .right-panel {
-  background:
-    linear-gradient(
-      180deg,
-      #1d1e34,
-      #17182a
-    );
+  background: linear-gradient(180deg, #1d1e34, #17182a);
 
   border-left: 1px solid rgba(157, 140, 255, 0.16);
 }
@@ -1071,8 +997,6 @@ body {
   border-radius: 8px;
 }
 
-
-
 .upcoming-item {
   border-bottom: 1px solid rgba(157, 140, 255, 0.1);
 }
@@ -1081,12 +1005,7 @@ body {
   border: 1px dashed rgba(157, 140, 255, 0.28);
   border-radius: 12px;
 
-  background:
-    linear-gradient(
-      135deg,
-      rgba(157, 140, 255, 0.1),
-      rgba(244, 143, 184, 0.06)
-    );
+  background: linear-gradient(135deg, rgba(157, 140, 255, 0.1), rgba(244, 143, 184, 0.06));
 }
 
 /* Yumuşak scrollbar */
@@ -1111,7 +1030,6 @@ body {
   background: rgba(157, 140, 255, 0.58);
   background-clip: padding-box;
 }
-
 
 /* ========================================
    YENİ NOT MODALI
@@ -1145,16 +1063,8 @@ body {
   color: var(--text);
 
   background:
-    radial-gradient(
-      circle at top right,
-      rgba(157, 140, 255, 0.14),
-      transparent 35%
-    ),
-    linear-gradient(
-      145deg,
-      #23243d,
-      #191a2f
-    );
+    radial-gradient(circle at top right, rgba(157, 140, 255, 0.14), transparent 35%),
+    linear-gradient(145deg, #23243d, #191a2f);
 
   border: 1px solid rgba(180, 166, 255, 0.42);
   border-radius: 18px;
@@ -1309,8 +1219,7 @@ body {
 .form-field textarea:focus {
   border-color: rgba(157, 140, 255, 0.67);
 
-  box-shadow:
-    0 0 0 3px rgba(157, 140, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(157, 140, 255, 0.08);
 }
 
 .form-field small {
@@ -1341,8 +1250,7 @@ body {
   border: 2px solid transparent;
   border-radius: 12px;
 
-  box-shadow:
-    0 5px 12px rgba(3, 3, 12, 0.2);
+  box-shadow: 0 5px 12px rgba(3, 3, 12, 0.2);
 
   font-size: 22px;
 
@@ -1429,17 +1337,11 @@ body {
 .primary-button {
   color: white;
 
-  background:
-    linear-gradient(
-      135deg,
-      #9481ee,
-      #705fc9
-    );
+  background: linear-gradient(135deg, #9481ee, #705fc9);
 
   border: 1px solid rgba(207, 197, 255, 0.5);
 
-  box-shadow:
-    0 7px 18px rgba(62, 44, 148, 0.29);
+  box-shadow: 0 7px 18px rgba(62, 44, 148, 0.29);
 }
 
 .secondary-button:hover,
@@ -1510,7 +1412,6 @@ body {
   scroll-behavior: smooth;
   padding-bottom: 50px;
 }
-
 
 /* ========================================
    POST-IT MASONRY DÜZENİ
@@ -1739,16 +1640,8 @@ body {
   color: var(--text);
 
   background:
-    radial-gradient(
-      circle at top right,
-      rgba(244, 143, 184, 0.13),
-      transparent 38%
-    ),
-    linear-gradient(
-      145deg,
-      #24243e,
-      #191a2e
-    );
+    radial-gradient(circle at top right, rgba(244, 143, 184, 0.13), transparent 38%),
+    linear-gradient(145deg, #24243e, #191a2e);
 
   border: 1px solid rgba(244, 143, 184, 0.35);
   border-radius: 18px;
@@ -1785,18 +1678,12 @@ body {
 
   place-items: center;
 
-  background:
-    linear-gradient(
-      145deg,
-      rgba(244, 143, 184, 0.19),
-      rgba(218, 87, 128, 0.09)
-    );
+  background: linear-gradient(145deg, rgba(244, 143, 184, 0.19), rgba(218, 87, 128, 0.09));
 
   border: 1px solid rgba(244, 143, 184, 0.34);
   border-radius: 18px;
 
-  box-shadow:
-    0 8px 22px rgba(5, 5, 15, 0.3);
+  box-shadow: 0 8px 22px rgba(5, 5, 15, 0.3);
 
   font-size: 29px;
 }
@@ -1865,17 +1752,11 @@ body {
 .confirm-delete-button {
   color: #fff5f8;
 
-  background:
-    linear-gradient(
-      135deg,
-      #df658c,
-      #bd456c
-    );
+  background: linear-gradient(135deg, #df658c, #bd456c);
 
   border: 1px solid rgba(255, 184, 208, 0.47);
 
-  box-shadow:
-    0 8px 20px rgba(159, 48, 88, 0.3);
+  box-shadow: 0 8px 20px rgba(159, 48, 88, 0.3);
 }
 
 .confirm-cancel-button:hover,
@@ -1888,8 +1769,7 @@ body {
 }
 
 .confirm-delete-button:hover {
-  box-shadow:
-    0 11px 25px rgba(159, 48, 88, 0.4);
+  box-shadow: 0 11px 25px rgba(159, 48, 88, 0.4);
 }
 
 .confirm-delete-button:focus-visible,
@@ -1962,8 +1842,7 @@ body {
   color: #ffe28b;
   font-size: 32px;
 
-  animation: loading-star 1.2s
-    ease-in-out infinite;
+  animation: loading-star 1.2s ease-in-out infinite;
 }
 
 .notes-loading p {
@@ -1983,8 +1862,7 @@ body {
   color: #ffd4e1;
   background: rgba(201, 70, 111, 0.12);
 
-  border: 1px solid
-    rgba(244, 143, 184, 0.32);
+  border: 1px solid rgba(244, 143, 184, 0.32);
   border-radius: 11px;
 }
 
@@ -2021,14 +1899,12 @@ body {
   0%,
   100% {
     opacity: 0.45;
-    transform: scale(0.9)
-      rotate(0deg);
+    transform: scale(0.9) rotate(0deg);
   }
 
   50% {
     opacity: 1;
-    transform: scale(1.12)
-      rotate(15deg);
+    transform: scale(1.12) rotate(15deg);
   }
 }
 
@@ -2037,8 +1913,7 @@ body {
 ======================================== */
 
 .app.app-trash-view {
-  grid-template-columns:
-    235px minmax(0, 1fr);
+  grid-template-columns: 235px minmax(0, 1fr);
 }
 
 .workspace-error-wrap {
@@ -2062,8 +1937,7 @@ body {
   padding: 18px;
 
   background: rgba(157, 140, 255, 0.055);
-  border: 1px solid
-    rgba(157, 140, 255, 0.18);
+  border: 1px solid rgba(157, 140, 255, 0.18);
   border-radius: 14px;
 }
 
@@ -2081,8 +1955,7 @@ body {
   place-items: center;
 
   background: rgba(244, 143, 184, 0.1);
-  border: 1px solid
-    rgba(244, 143, 184, 0.24);
+  border: 1px solid rgba(244, 143, 184, 0.24);
   border-radius: 12px;
 
   font-size: 23px;
@@ -2091,7 +1964,7 @@ body {
 .trash-heading h2 {
   margin: 0 0 5px;
 
-  font-family: "VT323", monospace;
+  font-family: 'VT323', monospace;
   font-size: 29px;
   font-weight: normal;
 }
@@ -2139,8 +2012,7 @@ body {
   margin-top: 12px;
   padding-top: 12px;
 
-  border-top: 1px dashed
-    rgba(37, 32, 51, 0.22);
+  border-top: 1px dashed rgba(37, 32, 51, 0.22);
 }
 
 .restore-note-button,
@@ -2151,7 +2023,7 @@ body {
   cursor: pointer;
 
   border-radius: 9px;
-  font-family: "VT323", monospace;
+  font-family: 'VT323', monospace;
   font-size: 18px;
 
   transition:
@@ -2162,22 +2034,19 @@ body {
 .restore-note-button {
   color: #203b30;
   background: rgba(91, 196, 139, 0.34);
-  border: 1px solid
-    rgba(35, 111, 72, 0.35);
+  border: 1px solid rgba(35, 111, 72, 0.35);
 }
 
 .permanent-delete-button {
   color: #542039;
   background: rgba(222, 92, 135, 0.27);
-  border: 1px solid
-    rgba(151, 49, 85, 0.3);
+  border: 1px solid rgba(151, 49, 85, 0.3);
 }
 
 .restore-note-button:hover,
 .permanent-delete-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 12px
-    rgba(20, 15, 30, 0.16);
+  box-shadow: 0 5px 12px rgba(20, 15, 30, 0.16);
 }
 
 .trash-empty {
@@ -2191,8 +2060,7 @@ body {
   color: var(--muted);
   background: rgba(157, 140, 255, 0.025);
 
-  border: 1px dashed
-    rgba(157, 140, 255, 0.23);
+  border: 1px dashed rgba(157, 140, 255, 0.23);
   border-radius: 15px;
 
   text-align: center;
@@ -2216,8 +2084,7 @@ body {
 
 @media (max-width: 1150px) {
   .app.app-trash-view {
-    grid-template-columns:
-      210px minmax(0, 1fr);
+    grid-template-columns: 210px minmax(0, 1fr);
   }
 }
 
@@ -2238,8 +2105,7 @@ body {
   color: #b9b4cf;
   background: rgba(157, 140, 255, 0.08);
 
-  border: 1px solid
-    rgba(157, 140, 255, 0.18);
+  border: 1px solid rgba(157, 140, 255, 0.18);
   border-radius: 8px;
 
   font-size: 22px;
@@ -2270,11 +2136,9 @@ body {
   justify-content: center;
 
   color: var(--muted);
-  background:
-    rgba(157, 140, 255, 0.035);
+  background: rgba(157, 140, 255, 0.035);
 
-  border: 1px dashed
-    rgba(157, 140, 255, 0.27);
+  border: 1px dashed rgba(157, 140, 255, 0.27);
   border-radius: 14px;
 
   text-align: center;
@@ -2288,7 +2152,7 @@ body {
   margin: 0;
 
   color: #ded8f2;
-  font-family: "VT323", monospace;
+  font-family: 'VT323', monospace;
   font-size: 26px;
   font-weight: normal;
 }
@@ -2322,11 +2186,10 @@ body {
   color: #aaa6c4;
   background: rgba(8, 9, 23, 0.35);
 
-  border: 1px solid
-    rgba(157, 140, 255, 0.2);
+  border: 1px solid rgba(157, 140, 255, 0.2);
   border-radius: 10px;
 
-  font-family: "VT323", monospace;
+  font-family: 'VT323', monospace;
   font-size: 19px;
 
   transition:
@@ -2343,12 +2206,7 @@ body {
   color: #ffffff;
 
   background: rgba(157, 140, 255, 0.14);
-  border-color: rgba(
-    190,
-    178,
-    255,
-    0.58
-  );
+  border-color: rgba(190, 178, 255, 0.58);
 }
 
 .priority-low.selected {
@@ -2384,8 +2242,7 @@ body {
   color: #c3bdd7;
   background: rgba(157, 140, 255, 0.09);
 
-  border: 1px solid
-    rgba(157, 140, 255, 0.2);
+  border: 1px solid rgba(157, 140, 255, 0.2);
   border-radius: 8px;
 
   font-size: 21px;
@@ -2402,8 +2259,7 @@ body {
 
   background: rgba(157, 140, 255, 0.045);
 
-  border: 1px solid
-    rgba(157, 140, 255, 0.17);
+  border: 1px solid rgba(157, 140, 255, 0.17);
   border-radius: 11px;
 }
 
@@ -2425,14 +2281,11 @@ body {
   color: #183a27;
   background: rgba(8, 9, 23, 0.4);
 
-  border: 1px solid
-    rgba(157, 140, 255, 0.34);
+  border: 1px solid rgba(157, 140, 255, 0.34);
   border-radius: 8px;
 }
 
-.completed-checkbox
-  input:checked
-  + .completed-checkbox-box {
+.completed-checkbox input:checked + .completed-checkbox-box {
   background: #8ed8a9;
   border-color: #baf0cc;
 }
@@ -2472,8 +2325,7 @@ body {
   color: rgba(36, 30, 49, 0.75);
   background: rgba(255, 255, 255, 0.22);
 
-  border: 1px solid
-    rgba(37, 32, 51, 0.14);
+  border: 1px solid rgba(37, 32, 51, 0.14);
   border-radius: 8px;
 
   font-size: 15px;
@@ -2496,11 +2348,10 @@ body {
   color: rgba(35, 30, 48, 0.72);
   background: rgba(255, 255, 255, 0.18);
 
-  border: 1px solid
-    rgba(37, 32, 51, 0.18);
+  border: 1px solid rgba(37, 32, 51, 0.18);
   border-radius: 8px;
 
-  font-family: "VT323", monospace;
+  font-family: 'VT323', monospace;
   font-size: 17px;
 }
 
@@ -2524,7 +2375,7 @@ body {
   top: 13px;
   right: 13px;
 
-  content: "✓";
+  content: '✓';
 
   color: rgba(27, 87, 48, 0.58);
   font-size: 25px;
@@ -2533,8 +2384,7 @@ body {
 /* GERÇEK NOT GÖRÜNÜMLERİ */
 
 .app.app-secondary-view {
-  grid-template-columns:
-    235px minmax(0, 1fr);
+  grid-template-columns: 235px minmax(0, 1fr);
 }
 
 .view-empty-state {
@@ -2548,8 +2398,7 @@ body {
   color: var(--muted);
   background: rgba(157, 140, 255, 0.025);
 
-  border: 1px dashed
-    rgba(157, 140, 255, 0.24);
+  border: 1px dashed rgba(157, 140, 255, 0.24);
   border-radius: 15px;
 
   text-align: center;
@@ -2563,7 +2412,7 @@ body {
   margin: 0;
 
   color: #ddd7f2;
-  font-family: "VT323", monospace;
+  font-family: 'VT323', monospace;
   font-size: 28px;
   font-weight: normal;
 }
@@ -2584,25 +2433,18 @@ body {
   cursor: pointer;
 
   color: white;
-  background:
-    linear-gradient(
-      135deg,
-      #9481ee,
-      #705fc9
-    );
+  background: linear-gradient(135deg, #9481ee, #705fc9);
 
-  border: 1px solid
-    rgba(207, 197, 255, 0.5);
+  border: 1px solid rgba(207, 197, 255, 0.5);
   border-radius: 10px;
 
-  font-family: "VT323", monospace;
+  font-family: 'VT323', monospace;
   font-size: 20px;
 }
 
 @media (max-width: 1150px) {
   .app.app-secondary-view {
-    grid-template-columns:
-      210px minmax(0, 1fr);
+    grid-template-columns: 210px minmax(0, 1fr);
   }
 }
 
@@ -2618,7 +2460,7 @@ body {
 
   border: 0;
 
-  font-family: "VT323", monospace;
+  font-family: 'VT323', monospace;
   font-size: 17px;
 
   transition:
@@ -2645,20 +2487,14 @@ body {
   color: #173524;
   background: rgba(8, 9, 23, 0.35);
 
-  border: 1px solid
-    rgba(157, 140, 255, 0.4);
+  border: 1px solid rgba(157, 140, 255, 0.4);
   border-radius: 7px;
 
   font-size: 17px;
 }
 
 .task-check-button:hover {
-  border-color: rgba(
-    190,
-    178,
-    255,
-    0.75
-  );
+  border-color: rgba(190, 178, 255, 0.75);
 }
 
 .task-content-button {
@@ -2685,15 +2521,12 @@ body {
   color: #dcd4ff;
 }
 
-.task-completed
-  .task-check-button {
+.task-completed .task-check-button {
   background: #86dda4;
   border-color: #b2f2c7;
 }
 
-.task-completed
-  .task-content-button
-  h3 {
+.task-completed .task-content-button h3 {
   color: #777993;
   text-decoration: line-through;
 }
@@ -2708,8 +2541,7 @@ body {
 
   border-top: 0;
   border-right: 0;
-  border-bottom: 1px solid
-    rgba(157, 140, 255, 0.1);
+  border-bottom: 1px solid rgba(157, 140, 255, 0.1);
   border-left: 0;
 
   text-align: left;
@@ -2722,12 +2554,7 @@ body {
 .upcoming-item:hover {
   padding-left: 7px;
 
-  background: rgba(
-    157,
-    140,
-    255,
-    0.045
-  );
+  background: rgba(157, 140, 255, 0.045);
 }
 
 .right-panel-empty {
@@ -2743,15 +2570,9 @@ body {
   padding: 13px;
 
   color: var(--muted);
-  background: rgba(
-    157,
-    140,
-    255,
-    0.025
-  );
+  background: rgba(157, 140, 255, 0.025);
 
-  border: 1px dashed
-    rgba(157, 140, 255, 0.18);
+  border: 1px dashed rgba(157, 140, 255, 0.18);
   border-radius: 11px;
 
   text-align: center;
@@ -2776,30 +2597,19 @@ body {
   cursor: pointer;
 
   color: #aaa0db;
-  background: rgba(
-    157,
-    140,
-    255,
-    0.045
-  );
+  background: rgba(157, 140, 255, 0.045);
 
-  border: 1px dashed
-    rgba(157, 140, 255, 0.18);
+  border: 1px dashed rgba(157, 140, 255, 0.18);
   border-radius: 8px;
 
-  font-family: "VT323", monospace;
+  font-family: 'VT323', monospace;
   font-size: 17px;
 }
 
 .right-panel-more-button:hover {
   color: #d9d0ff;
 
-  background: rgba(
-    157,
-    140,
-    255,
-    0.09
-  );
+  background: rgba(157, 140, 255, 0.09);
 }
 
 /* Bugün paneli hizalama düzeltmesi */
@@ -2866,8 +2676,6 @@ body {
   font-size: 17px;
 }
 
-
-
 .task {
   display: grid;
   grid-template-columns: 28px minmax(0, 1fr) 24px;
@@ -2902,7 +2710,7 @@ body {
   overflow: hidden;
 
   color: #f1edf9;
-  font-family: "VT323", monospace;
+  font-family: 'VT323', monospace;
   font-size: 19px;
   font-weight: normal;
   line-height: 1.1;
@@ -2917,7 +2725,7 @@ body {
   margin-top: 3px;
 
   color: var(--muted);
-  font-family: "VT323", monospace;
+  font-family: 'VT323', monospace;
   font-size: 16px;
   line-height: 1;
 }
@@ -3003,8 +2811,7 @@ body {
 
   background: rgba(8, 9, 23, 0.35);
 
-  border: 1px solid
-    rgba(157, 140, 255, 0.2);
+  border: 1px solid rgba(157, 140, 255, 0.2);
   border-radius: 11px;
 
   font-size: 23px;
@@ -3017,32 +2824,15 @@ body {
 
 .board-icon-option:hover {
   transform: translateY(-2px);
-  background: rgba(
-    157,
-    140,
-    255,
-    0.09
-  );
+  background: rgba(157, 140, 255, 0.09);
 }
 
 .board-icon-option.selected {
-  background: rgba(
-    157,
-    140,
-    255,
-    0.16
-  );
+  background: rgba(157, 140, 255, 0.16);
 
-  border-color: rgba(
-    205,
-    194,
-    255,
-    0.62
-  );
+  border-color: rgba(205, 194, 255, 0.62);
 
-  box-shadow:
-    0 0 0 3px
-      rgba(157, 140, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(157, 140, 255, 0.08);
 }
 
 .board-color-options {
@@ -3077,16 +2867,9 @@ body {
 }
 
 .board-color-option.selected {
-  border-color: rgba(
-    255,
-    255,
-    255,
-    0.85
-  );
+  border-color: rgba(255, 255, 255, 0.85);
 
-  box-shadow:
-    0 0 0 3px
-      rgba(157, 140, 255, 0.14);
+  box-shadow: 0 0 0 3px rgba(157, 140, 255, 0.14);
 }
 
 .board-color-purple {
@@ -3120,15 +2903,9 @@ body {
 
   padding: 13px;
 
-  background: rgba(
-    157,
-    140,
-    255,
-    0.045
-  );
+  background: rgba(157, 140, 255, 0.045);
 
-  border: 1px dashed
-    rgba(157, 140, 255, 0.22);
+  border: 1px dashed rgba(157, 140, 255, 0.22);
   border-radius: 12px;
 }
 
@@ -3234,18 +3011,12 @@ body {
   outline: none;
 
   color: var(--text);
-  background-color: rgba(
-    8,
-    9,
-    23,
-    0.42
-  );
+  background-color: rgba(8, 9, 23, 0.42);
 
-  border: 1px solid
-    rgba(157, 140, 255, 0.24);
+  border: 1px solid rgba(157, 140, 255, 0.24);
   border-radius: 11px;
 
-  font-family: "VT323", monospace;
+  font-family: 'VT323', monospace;
   font-size: 21px;
 
   color-scheme: dark;
@@ -3256,16 +3027,9 @@ body {
 }
 
 .board-select:focus {
-  border-color: rgba(
-    157,
-    140,
-    255,
-    0.67
-  );
+  border-color: rgba(157, 140, 255, 0.67);
 
-  box-shadow:
-    0 0 0 3px
-      rgba(157, 140, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(157, 140, 255, 0.08);
 }
 
 .board-select option {
@@ -3293,7 +3057,7 @@ body {
   border: 1px solid rgba(40, 35, 60, 0.18);
   border-radius: 7px;
 
-  font-family: "VT323", monospace;
+  font-family: 'VT323', monospace;
   font-size: 16px;
   line-height: 1;
 }
@@ -3337,17 +3101,11 @@ body {
 .board-item.active {
   color: #eee9ff;
 
-  background: rgba(
-    157,
-    140,
-    255,
-    0.13
-  );
+  background: rgba(157, 140, 255, 0.13);
 
   box-shadow:
     inset 3px 0 0 #a997ff,
-    0 0 0 1px
-      rgba(157, 140, 255, 0.12);
+    0 0 0 1px rgba(157, 140, 255, 0.12);
 }
 
 .board-item.active p {
@@ -3356,20 +3114,14 @@ body {
 
 .board-item.active strong {
   color: #d5ccff;
-  background: rgba(
-    157,
-    140,
-    255,
-    0.15
-  );
+  background: rgba(157, 140, 255, 0.15);
 }
 
 /* PANO DÜZENLEME BUTONU */
 
 .board-list-row {
   display: grid;
-  grid-template-columns:
-    minmax(0, 1fr) 30px;
+  grid-template-columns: minmax(0, 1fr) 30px;
   gap: 5px;
   align-items: center;
 }
@@ -3395,7 +3147,7 @@ body {
   border: 1px solid transparent;
   border-radius: 8px;
 
-  font-family: "VT323", monospace;
+  font-family: 'VT323', monospace;
   font-size: 18px;
 
   opacity: 0;
@@ -3458,36 +3210,24 @@ body {
   opacity: 1;
   transform: translateY(-2px);
 
-  background: rgba(
-    255,
-    255,
-    255,
-    0.22
-  );
+  background: rgba(255, 255, 255, 0.22);
 }
 
 .pin-note-button.active {
   opacity: 1;
   transform: rotate(-8deg);
 
-  background: rgba(
-    255,
-    255,
-    255,
-    0.28
-  );
+  background: rgba(255, 255, 255, 0.28);
 }
 
 .sticky-note-pinned {
   box-shadow:
-    0 13px 25px
-      rgba(0, 0, 0, 0.22),
-    0 0 0 2px
-      rgba(255, 255, 255, 0.18);
+    0 13px 25px rgba(0, 0, 0, 0.22),
+    0 0 0 2px rgba(255, 255, 255, 0.18);
 }
 
 .sticky-note-pinned::before {
-  content: "SABİT";
+  content: 'SABİT';
 
   position: absolute;
   top: -9px;
@@ -3498,13 +3238,10 @@ body {
   color: #ded8ff;
   background: #343149;
 
-  border: 1px solid
-    rgba(183, 169, 255, 0.45);
+  border: 1px solid rgba(183, 169, 255, 0.45);
   border-radius: 5px;
 
-  font-family:
-    "Press Start 2P",
-    monospace;
+  font-family: 'Press Start 2P', monospace;
   font-size: 6px;
   line-height: 1;
 }
@@ -3539,7 +3276,7 @@ body {
 .notes-sort-field > span {
   color: var(--muted);
 
-  font-family: "VT323", monospace;
+  font-family: 'VT323', monospace;
   font-size: 17px;
 }
 
@@ -3553,11 +3290,10 @@ body {
   color: #ddd7f2;
   background: rgba(8, 9, 23, 0.42);
 
-  border: 1px solid
-    rgba(157, 140, 255, 0.22);
+  border: 1px solid rgba(157, 140, 255, 0.22);
   border-radius: 9px;
 
-  font-family: "VT323", monospace;
+  font-family: 'VT323', monospace;
   font-size: 18px;
 
   color-scheme: dark;
@@ -3569,18 +3305,11 @@ body {
 
 .notes-sort-field select:hover,
 .notes-sort-field select:focus {
-  border-color: rgba(
-    157,
-    140,
-    255,
-    0.62
-  );
+  border-color: rgba(157, 140, 255, 0.62);
 }
 
 .notes-sort-field select:focus {
-  box-shadow:
-    0 0 0 3px
-      rgba(157, 140, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(157, 140, 255, 0.08);
 }
 
 .notes-sort-field option {
@@ -3615,7 +3344,7 @@ body {
 }
 
 .sticky-note-overdue::after {
-  content: "GECİKTİ";
+  content: 'GECİKTİ';
 
   position: absolute;
   top: -9px;
@@ -3626,13 +3355,10 @@ body {
   color: #ffe3e7;
   background: #7f3341;
 
-  border: 1px solid
-    rgba(255, 166, 180, 0.6);
+  border: 1px solid rgba(255, 166, 180, 0.6);
   border-radius: 5px;
 
-  font-family:
-    "Press Start 2P",
-    monospace;
+  font-family: 'Press Start 2P', monospace;
   font-size: 6px;
   line-height: 1;
 
@@ -3641,25 +3367,14 @@ body {
 
 .due-date-badge-overdue {
   color: #702836;
-  background: rgba(
-    255,
-    169,
-    182,
-    0.72
-  );
+  background: rgba(255, 169, 182, 0.72);
 
-  border-color: rgba(
-    126,
-    38,
-    54,
-    0.3
-  );
+  border-color: rgba(126, 38, 54, 0.3);
 
   font-weight: bold;
 }
 
-.navigation-item.active
-  span:first-child {
+.navigation-item.active span:first-child {
   transform: translateY(-1px);
 }
 
@@ -3690,31 +3405,20 @@ body {
   pointer-events: auto;
 
   color: #eeeafd;
-  background:
-    linear-gradient(
-      145deg,
-      rgba(38, 37, 61, 0.98),
-      rgba(21, 22, 39, 0.98)
-    );
+  background: linear-gradient(145deg, rgba(38, 37, 61, 0.98), rgba(21, 22, 39, 0.98));
 
-  border: 1px solid
-    rgba(172, 157, 255, 0.5);
+  border: 1px solid rgba(172, 157, 255, 0.5);
   border-radius: 14px;
 
   box-shadow:
-    0 20px 50px
-      rgba(0, 0, 0, 0.42),
-    0 0 0 3px
-      rgba(157, 140, 255, 0.08);
+    0 20px 50px rgba(0, 0, 0, 0.42),
+    0 0 0 3px rgba(157, 140, 255, 0.08);
 
-  animation:
-    postiva-toast-enter
-    350ms
-    cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: postiva-toast-enter 350ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .postiva-toast::before {
-  content: "";
+  content: '';
 
   position: absolute;
   top: 0;
@@ -3778,9 +3482,7 @@ body {
 .postiva-toast-brand strong {
   color: #ded7ff;
 
-  font-family:
-    "Press Start 2P",
-    monospace;
+  font-family: 'Press Start 2P', monospace;
   font-size: 9px;
   line-height: 1;
 }
@@ -3788,9 +3490,7 @@ body {
 .postiva-toast-brand small {
   color: #9994b0;
 
-  font-family:
-    "VT323",
-    monospace;
+  font-family: 'VT323', monospace;
   font-size: 16px;
 }
 
@@ -3820,12 +3520,7 @@ body {
 .postiva-toast-close:hover {
   color: white;
 
-  background: rgba(
-    255,
-    255,
-    255,
-    0.08
-  );
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .postiva-toast-content {
@@ -3846,15 +3541,9 @@ body {
 
   place-items: center;
 
-  background: rgba(
-    157,
-    140,
-    255,
-    0.1
-  );
+  background: rgba(157, 140, 255, 0.1);
 
-  border: 1px solid
-    rgba(157, 140, 255, 0.2);
+  border: 1px solid rgba(157, 140, 255, 0.2);
   border-radius: 12px;
 
   font-size: 24px;
@@ -3867,9 +3556,7 @@ body {
 .postiva-toast-message > span {
   color: #aaa2d5;
 
-  font-family:
-    "VT323",
-    monospace;
+  font-family: 'VT323', monospace;
   font-size: 16px;
 }
 
@@ -3879,9 +3566,7 @@ body {
   overflow: hidden;
 
   color: #f2edff;
-  font-family:
-    "VT323",
-    monospace;
+  font-family: 'VT323', monospace;
   font-size: 24px;
   font-weight: normal;
   line-height: 1;
@@ -3895,9 +3580,7 @@ body {
 
   color: #aaa5ba;
 
-  font-family:
-    "VT323",
-    monospace;
+  font-family: 'VT323', monospace;
   font-size: 17px;
   line-height: 1.1;
 }
@@ -3923,9 +3606,7 @@ body {
 
   border-radius: 9px;
 
-  font-family:
-    "VT323",
-    monospace;
+  font-family: 'VT323', monospace;
   font-size: 18px;
 
   transition:
@@ -3940,24 +3621,13 @@ body {
 
 .postiva-toast-open {
   color: #d7ceff;
-  background: rgba(
-    157,
-    140,
-    255,
-    0.09
-  );
+  background: rgba(157, 140, 255, 0.09);
 
-  border: 1px solid
-    rgba(157, 140, 255, 0.24);
+  border: 1px solid rgba(157, 140, 255, 0.24);
 }
 
 .postiva-toast-open:hover {
-  background: rgba(
-    157,
-    140,
-    255,
-    0.16
-  );
+  background: rgba(157, 140, 255, 0.16);
 }
 
 .postiva-toast-complete {
@@ -3977,12 +3647,7 @@ body {
   height: 3px;
   margin: 13px 5px 0;
 
-  background: rgba(
-    255,
-    255,
-    255,
-    0.07
-  );
+  background: rgba(255, 255, 255, 0.07);
 
   border-radius: 999px;
 }
@@ -3993,20 +3658,11 @@ body {
   width: 100%;
   height: 100%;
 
-  background:
-    linear-gradient(
-      90deg,
-      #8e7de2,
-      #c7bcff
-    );
+  background: linear-gradient(90deg, #8e7de2, #c7bcff);
 
   transform-origin: left;
 
-  animation:
-    postiva-toast-progress
-    8s
-    linear
-    forwards;
+  animation: postiva-toast-progress 8s linear forwards;
 }
 
 .postiva-toast-decoration {
@@ -4018,9 +3674,7 @@ body {
 
   color: #716d87;
 
-  font-family:
-    "VT323",
-    monospace;
+  font-family: 'VT323', monospace;
   font-size: 14px;
 }
 
@@ -4028,17 +3682,13 @@ body {
   from {
     opacity: 0;
 
-    transform:
-      translateX(35px)
-      scale(0.96);
+    transform: translateX(35px) scale(0.96);
   }
 
   to {
     opacity: 1;
 
-    transform:
-      translateX(0)
-      scale(1);
+    transform: translateX(0) scale(1);
   }
 }
 
@@ -4099,7 +3749,7 @@ body {
   margin: 0;
 
   color: #f1edff;
-  font-family: "Press Start 2P", monospace;
+  font-family: 'Press Start 2P', monospace;
   font-size: 15px;
   line-height: 1.4;
 }
@@ -4108,7 +3758,7 @@ body {
   margin: 8px 0 0;
 
   color: #9690aa;
-  font-family: "VT323", monospace;
+  font-family: 'VT323', monospace;
   font-size: 19px;
 }
 
@@ -4125,18 +3775,12 @@ body {
 
   padding: 20px;
 
-  background:
-    linear-gradient(
-      145deg,
-      rgba(40, 39, 62, 0.92),
-      rgba(27, 27, 45, 0.92)
-    );
+  background: linear-gradient(145deg, rgba(40, 39, 62, 0.92), rgba(27, 27, 45, 0.92));
 
   border: 1px solid rgba(160, 145, 230, 0.16);
   border-radius: 16px;
 
-  box-shadow:
-    0 14px 30px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
 
   transition:
     transform 160ms ease,
@@ -4152,7 +3796,7 @@ body {
   margin: 0 0 7px;
 
   color: #e7e1ff;
-  font-family: "Press Start 2P", monospace;
+  font-family: 'Press Start 2P', monospace;
   font-size: 11px;
   line-height: 1.4;
 }
@@ -4162,7 +3806,7 @@ body {
   margin: 0;
 
   color: #9993ab;
-  font-family: "VT323", monospace;
+  font-family: 'VT323', monospace;
   font-size: 18px;
   line-height: 1.2;
 }
@@ -4192,7 +3836,6 @@ body {
     align-items: flex-start;
   }
 }
-
 
 /* ========================================
    AYARLAR SEÇENEKLERİ
@@ -4246,7 +3889,7 @@ body {
 .settings-option strong {
   color: #ddd6f7;
 
-  font-family: "VT323", monospace;
+  font-family: 'VT323', monospace;
   font-size: 20px;
   font-weight: normal;
 }
@@ -4254,7 +3897,7 @@ body {
 .settings-option > div > span {
   color: #8f899f;
 
-  font-family: "VT323", monospace;
+  font-family: 'VT323', monospace;
   font-size: 17px;
 }
 
@@ -4352,7 +3995,7 @@ body {
 
   color: #dcd5f6;
 
-  font-family: "VT323", monospace;
+  font-family: 'VT323', monospace;
   font-size: 20px;
   text-align: right;
 }
@@ -4400,7 +4043,7 @@ body {
 .settings-reset-section strong {
   color: #e4ddf7;
 
-  font-family: "VT323", monospace;
+  font-family: 'VT323', monospace;
   font-size: 20px;
   font-weight: normal;
 }
@@ -4408,7 +4051,7 @@ body {
 .settings-reset-section span {
   color: #8f899f;
 
-  font-family: "VT323", monospace;
+  font-family: 'VT323', monospace;
   font-size: 17px;
 }
 
@@ -4425,7 +4068,7 @@ body {
   border: 1px solid rgba(239, 165, 196, 0.25);
   border-radius: 9px;
 
-  font-family: "VT323", monospace;
+  font-family: 'VT323', monospace;
   font-size: 18px;
 
   transition:
@@ -4463,7 +4106,7 @@ body {
   border: 1px solid rgba(164, 145, 255, 0.28);
   border-radius: 9px;
 
-  font-family: "VT323", monospace;
+  font-family: 'VT323', monospace;
   font-size: 18px;
 
   transition:
@@ -4482,4 +4125,64 @@ body {
 .settings-action-button:disabled {
   cursor: not-allowed;
   opacity: 0.45;
+}
+
+/* ========================================
+   YEDEKLEME İŞLEM MESAJI
+======================================== */
+
+.settings-feedback {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  margin-top: 17px;
+  padding: 11px 13px;
+
+  border-radius: 10px;
+
+  font-family: 'VT323', monospace;
+}
+
+.settings-feedback > span {
+  display: grid;
+  flex-shrink: 0;
+
+  width: 23px;
+  height: 23px;
+
+  place-items: center;
+
+  border-radius: 7px;
+
+  font-size: 17px;
+}
+
+.settings-feedback p {
+  margin: 1px 0 0;
+
+  font-size: 18px;
+  line-height: 1.15;
+}
+
+.settings-feedback-success {
+  color: #b5e8c8;
+  background: rgba(145, 215, 173, 0.08);
+  border: 1px solid rgba(145, 215, 173, 0.22);
+}
+
+.settings-feedback-success > span {
+  color: #173322;
+  background: #91d7ad;
+}
+
+.settings-feedback-error {
+  color: #f0b8c9;
+  background: rgba(239, 165, 196, 0.08);
+  border: 1px solid rgba(239, 165, 196, 0.22);
+}
+
+.settings-feedback-error > span {
+  color: #3c1724;
+  background: #efa5c4;
 }

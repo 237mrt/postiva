@@ -147,8 +147,17 @@ const registerBackupHandlers = (backupService, { onBackupRestored } = {}) => {
        */
       if (openResult.canceled || openResult.filePaths.length === 0) {
         return createSuccessResponse({
-          canceled: true,
-          restored: false
+          canceled: false,
+          restored: true,
+          filePath: selectedFilePath,
+          recoveryFilePath: restoredData.recoveryFilePath,
+
+          summary: {
+            noteCount: restoredData.notes.length,
+            boardCount: restoredData.boards.length
+          },
+
+          settings: restoredData.settings
         })
       }
 

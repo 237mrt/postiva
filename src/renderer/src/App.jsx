@@ -88,6 +88,8 @@ function App() {
   const [settings, setSettings] = useState(null)
   const [isSettingsLoading, setIsSettingsLoading] = useState(true)
 
+  const [backupFeedback, setBackupFeedback] = useState(null)
+
   const [isBackupRestoring, setIsBackupRestoring] = useState(false)
   const [isRestoreConfirmOpen, setIsRestoreConfirmOpen] = useState(false)
 
@@ -498,6 +500,7 @@ function App() {
 
   const exportBackup = async () => {
     setAppError('')
+    setBackupFeedback(null)
 
     try {
       if (!window.api?.backup?.export) {
@@ -513,9 +516,16 @@ function App() {
       }
 
       console.log('[Postiva] Yedek kaydedildi:', exportResult.filePath)
+      setBackupFeedback({
+        type: 'success',
+        message: 'Postiva yedeği başarıyla kaydedildi.'
+      })
     } catch (error) {
       console.error('[Postiva] Yedek oluşturulamadı:', error)
-
+      setBackupFeedback({
+        type: 'error',
+        message: error.message
+      })
       setAppError(error.message)
     }
   }
@@ -544,6 +554,7 @@ function App() {
     }
 
     setAppError('')
+    setBackupFeedback(null)
     setIsBackupRestoring(true)
 
     try {
@@ -594,11 +605,21 @@ function App() {
        * yeniden yüklüyoruz.
        */
       await Promise.all([loadNotes(), loadDeletedNotes(), loadBoards(), loadSettings()])
+      setBackupFeedback({
+        type: 'success',
+        message:
+          `${restoreResult.summary.noteCount} not ve ` +
+          `${restoreResult.summary.boardCount} pano başarıyla geri yüklendi. ` +
+          'Önceki verilerin için otomatik kurtarma yedeği oluşturuldu.'
+      })
 
       console.log('[Postiva] Yedek arayüze başarıyla yüklendi:', restoreResult.summary)
     } catch (error) {
       console.error('[Postiva] Yedek geri yüklenemedi:', error)
-
+      setBackupFeedback({
+        type: 'error',
+        message: error.message
+      })
       setAppError(error.message)
     } finally {
       setIsBackupRestoring(false)
@@ -1212,6 +1233,7 @@ function App() {
             settings={settings}
             isLoading={isSettingsLoading}
             isBackupRestoring={isBackupRestoring}
+            backupFeedback={backupFeedback}
             onToggleNotifications={toggleNotifications}
             onToggleNotificationSound={toggleNotificationSound}
             onNotificationVolumeChange={updateNotificationVolume}

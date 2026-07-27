@@ -1,9 +1,14 @@
+import { mkdir, writeFile } from 'node:fs/promises'
+import { join } from 'node:path'
+
 class BackupService {
-  constructor(noteStore, boardStore, settingsStore, appVersion) {
+  constructor(noteStore, boardStore, settingsStore, appVersion, userDataPath) {
     this.noteStore = noteStore
     this.boardStore = boardStore
     this.settingsStore = settingsStore
     this.appVersion = appVersion
+
+    this.recoveryDirectory = join(userDataPath, 'backups', 'recovery')
   }
 
   async restoreBackupData(backupData) {
@@ -77,6 +82,8 @@ class BackupService {
       }
     }
 
+    const recoveryFilePath = await this.createRecoveryBackup()
+
     try {
       /*
        * Önce panoları yazıyoruz çünkü notlar
@@ -93,7 +100,8 @@ class BackupService {
       return {
         notes: restoredNotes,
         boards: restoredBoards,
-        settings: restoredSettings
+        settings: restoredSettings,
+        recoveryFilePath
       }
     } catch (error) {
       console.error('[Postiva] Geri yükleme başarısız oldu, eski veriler geri getiriliyor:', error)
@@ -143,6 +151,28 @@ class BackupService {
         settings
       }
     }
+  }
+
+  async createRecoveryBackup() {
+    const backupData = await this.createBackupData()
+
+    await mkdir(this.recoveryDirectory, {
+      recursive: true
+    })
+
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+
+    const fileName = `Postiva-Kurtarma-${timestamp}.json`
+
+    const recoveryFilePath = join(this.recoveryDirectory, fileName)
+
+    const jsonContent = JSON.stringify(backupData, null, 2)
+
+    await writeFile(recoveryFilePath, jsonContent, 'utf8')
+
+    console.log(`[Postiva] Kurtarma yedeği oluşturuldu: ${recoveryFilePath}`)
+
+    return recoveryFilePath
   }
 
   validateBackupData(backupData) {

@@ -58,7 +58,35 @@ class NoteStore {
   async writeData(data) {
     const jsonContent = JSON.stringify(data, null, 2)
 
-    await fs.writeFile(this.filePath, jsonContent, 'utf8')
+    const temporaryFilePath = `${this.filePath}.tmp`
+
+    try {
+      /*
+       * Önce veriyi geçici dosyaya yazıyoruz.
+       * Böylece notes.json yazma sırasında yarım kalmıyor.
+       */
+      await fs.writeFile(temporaryFilePath, jsonContent, 'utf8')
+
+      /*
+       * Geçici dosya başarıyla oluşturulduktan sonra
+       * gerçek not dosyasının yerine geçiriyoruz.
+       */
+      await fs.rename(temporaryFilePath, this.filePath)
+    } catch (error) {
+      /*
+       * İşlem başarısız olursa geçici dosyanın
+       * projede kalmasını engelliyoruz.
+       */
+      try {
+        await fs.rm(temporaryFilePath, {
+          force: true
+        })
+      } catch {
+        // Geçici dosya zaten yoksa işlem gerekmez.
+      }
+
+      throw error
+    }
   }
 
   async getAllNotes({ includeDeleted = false } = {}) {

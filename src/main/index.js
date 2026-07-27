@@ -237,8 +237,14 @@ app.whenReady().then(async () => {
   /*
    * Yedekleme sistemi
    */
-  backupService = new BackupService(noteStore, boardStore, settingsStore, app.getVersion())
-
+  backupService = new BackupService(
+    noteStore,
+    boardStore,
+    settingsStore,
+    app.getVersion(),
+    app.getPath('userData')
+  )
+  
   registerBackupHandlers(backupService, {
     onBackupRestored: async (restoredSettings) => {
       appSettings = restoredSettings
@@ -246,7 +252,7 @@ app.whenReady().then(async () => {
       settingsService.applyOpenAtLogin(restoredSettings.openAtLogin)
     }
   })
-  
+
   /*
    * Masaüstü bildirim sistemi
    */
