@@ -1,46 +1,47 @@
-import { contextBridge, ipcRenderer } from "electron";
+import { contextBridge, ipcRenderer } from 'electron'
 
-import { electronAPI } from "@electron-toolkit/preload";
+import { electronAPI } from '@electron-toolkit/preload'
 
 const api = {
   notes: {
-    list: () => ipcRenderer.invoke("notes:list"),
+    list: () => ipcRenderer.invoke('notes:list'),
 
-    listDeleted: () => ipcRenderer.invoke("notes:list-deleted"),
+    listDeleted: () => ipcRenderer.invoke('notes:list-deleted'),
 
-    create: (noteData) => ipcRenderer.invoke("notes:create", noteData),
+    create: (noteData) => ipcRenderer.invoke('notes:create', noteData),
 
-    update: (noteId, noteData) =>
-      ipcRenderer.invoke("notes:update", noteId, noteData),
+    update: (noteId, noteData) => ipcRenderer.invoke('notes:update', noteId, noteData),
 
-    moveToTrash: (noteId) => ipcRenderer.invoke("notes:move-to-trash", noteId),
+    moveToTrash: (noteId) => ipcRenderer.invoke('notes:move-to-trash', noteId),
 
-    restore: (noteId) => ipcRenderer.invoke("notes:restore", noteId),
+    restore: (noteId) => ipcRenderer.invoke('notes:restore', noteId),
 
-    permanentlyDelete: (noteId) =>
-      ipcRenderer.invoke("notes:permanently-delete", noteId),
+    permanentlyDelete: (noteId) => ipcRenderer.invoke('notes:permanently-delete', noteId)
   },
   boards: {
-    list: () => ipcRenderer.invoke("boards:list"),
+    list: () => ipcRenderer.invoke('boards:list'),
 
-    create: (boardData) => ipcRenderer.invoke("boards:create", boardData),
+    create: (boardData) => ipcRenderer.invoke('boards:create', boardData),
 
-    update: (boardId, boardData) =>
-      ipcRenderer.invoke("boards:update", boardId, boardData),
+    update: (boardId, boardData) => ipcRenderer.invoke('boards:update', boardId, boardData),
 
-    delete: (boardId) => ipcRenderer.invoke("boards:delete", boardId),
+    delete: (boardId) => ipcRenderer.invoke('boards:delete', boardId)
   },
-};
+
+  notifications: {
+    show: (notificationData) => ipcRenderer.invoke('notifications:show', notificationData)
+  }
+}
 
 if (process.contextIsolated) {
   try {
-    contextBridge.exposeInMainWorld("electron", electronAPI);
+    contextBridge.exposeInMainWorld('electron', electronAPI)
 
-    contextBridge.exposeInMainWorld("api", api);
+    contextBridge.exposeInMainWorld('api', api)
   } catch (error) {
-    console.error(error);
+    console.error(error)
   }
 } else {
-  window.electron = electronAPI;
-  window.api = api;
+  window.electron = electronAPI
+  window.api = api
 }

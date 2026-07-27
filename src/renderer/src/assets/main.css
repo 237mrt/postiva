@@ -3662,3 +3662,401 @@ body {
   span:first-child {
   transform: translateY(-1px);
 }
+
+/* ========================================
+   POSTIVA ÖZEL BİLDİRİMİ
+======================================== */
+
+.postiva-toast-layer {
+  position: fixed;
+  top: 22px;
+  right: 22px;
+
+  z-index: 9999;
+
+  width: min(370px, calc(100vw - 32px));
+
+  pointer-events: none;
+}
+
+.postiva-toast {
+  position: relative;
+
+  overflow: hidden;
+
+  width: 100%;
+  padding: 15px;
+
+  pointer-events: auto;
+
+  color: #eeeafd;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(38, 37, 61, 0.98),
+      rgba(21, 22, 39, 0.98)
+    );
+
+  border: 1px solid
+    rgba(172, 157, 255, 0.5);
+  border-radius: 14px;
+
+  box-shadow:
+    0 20px 50px
+      rgba(0, 0, 0, 0.42),
+    0 0 0 3px
+      rgba(157, 140, 255, 0.08);
+
+  animation:
+    postiva-toast-enter
+    350ms
+    cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.postiva-toast::before {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 5px;
+  height: 100%;
+
+  background: #a997ff;
+}
+
+.postiva-toast-yellow::before {
+  background: #f3d77f;
+}
+
+.postiva-toast-pink::before {
+  background: #efa5c4;
+}
+
+.postiva-toast-blue::before {
+  background: #8ec8ef;
+}
+
+.postiva-toast-green::before {
+  background: #91d7ad;
+}
+
+.postiva-toast-orange::before {
+  background: #efa970;
+}
+
+.postiva-toast-purple::before {
+  background: #ad9af7;
+}
+
+.postiva-toast-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding-left: 5px;
+}
+
+.postiva-toast-brand {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+}
+
+.postiva-toast-brand > span {
+  color: #b8a8ff;
+  font-size: 20px;
+}
+
+.postiva-toast-brand div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.postiva-toast-brand strong {
+  color: #ded7ff;
+
+  font-family:
+    "Press Start 2P",
+    monospace;
+  font-size: 9px;
+  line-height: 1;
+}
+
+.postiva-toast-brand small {
+  color: #9994b0;
+
+  font-family:
+    "VT323",
+    monospace;
+  font-size: 16px;
+}
+
+.postiva-toast-close {
+  display: grid;
+
+  width: 28px;
+  height: 28px;
+  padding: 0;
+
+  cursor: pointer;
+  place-items: center;
+
+  color: #aaa5bd;
+  background: transparent;
+
+  border: 1px solid transparent;
+  border-radius: 7px;
+
+  font-size: 21px;
+
+  transition:
+    color 150ms ease,
+    background 150ms ease;
+}
+
+.postiva-toast-close:hover {
+  color: white;
+
+  background: rgba(
+    255,
+    255,
+    255,
+    0.08
+  );
+}
+
+.postiva-toast-content {
+  display: grid;
+  grid-template-columns: 47px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+
+  margin-top: 13px;
+  padding: 12px 7px;
+}
+
+.postiva-toast-icon {
+  display: grid;
+
+  width: 47px;
+  height: 47px;
+
+  place-items: center;
+
+  background: rgba(
+    157,
+    140,
+    255,
+    0.1
+  );
+
+  border: 1px solid
+    rgba(157, 140, 255, 0.2);
+  border-radius: 12px;
+
+  font-size: 24px;
+}
+
+.postiva-toast-message {
+  min-width: 0;
+}
+
+.postiva-toast-message > span {
+  color: #aaa2d5;
+
+  font-family:
+    "VT323",
+    monospace;
+  font-size: 16px;
+}
+
+.postiva-toast-message h3 {
+  margin: 2px 0 4px;
+
+  overflow: hidden;
+
+  color: #f2edff;
+  font-family:
+    "VT323",
+    monospace;
+  font-size: 24px;
+  font-weight: normal;
+  line-height: 1;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.postiva-toast-message p {
+  margin: 0;
+
+  color: #aaa5ba;
+
+  font-family:
+    "VT323",
+    monospace;
+  font-size: 17px;
+  line-height: 1.1;
+}
+
+.postiva-toast-message p strong {
+  color: #d3c9ff;
+  font-weight: normal;
+}
+
+.postiva-toast-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+
+  padding: 0 5px;
+}
+
+.postiva-toast-actions button {
+  min-height: 39px;
+  padding: 8px 11px;
+
+  cursor: pointer;
+
+  border-radius: 9px;
+
+  font-family:
+    "VT323",
+    monospace;
+  font-size: 18px;
+
+  transition:
+    transform 150ms ease,
+    background 150ms ease,
+    border-color 150ms ease;
+}
+
+.postiva-toast-actions button:hover {
+  transform: translateY(-2px);
+}
+
+.postiva-toast-open {
+  color: #d7ceff;
+  background: rgba(
+    157,
+    140,
+    255,
+    0.09
+  );
+
+  border: 1px solid
+    rgba(157, 140, 255, 0.24);
+}
+
+.postiva-toast-open:hover {
+  background: rgba(
+    157,
+    140,
+    255,
+    0.16
+  );
+}
+
+.postiva-toast-complete {
+  color: #193324;
+  background: #91d7ad;
+
+  border: 1px solid #b1ecc7;
+}
+
+.postiva-toast-complete:hover {
+  background: #a3e5bb;
+}
+
+.postiva-toast-progress {
+  overflow: hidden;
+
+  height: 3px;
+  margin: 13px 5px 0;
+
+  background: rgba(
+    255,
+    255,
+    255,
+    0.07
+  );
+
+  border-radius: 999px;
+}
+
+.postiva-toast-progress span {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      #8e7de2,
+      #c7bcff
+    );
+
+  transform-origin: left;
+
+  animation:
+    postiva-toast-progress
+    8s
+    linear
+    forwards;
+}
+
+.postiva-toast-decoration {
+  display: flex;
+  justify-content: space-between;
+
+  margin-top: 8px;
+  padding: 0 6px;
+
+  color: #716d87;
+
+  font-family:
+    "VT323",
+    monospace;
+  font-size: 14px;
+}
+
+@keyframes postiva-toast-enter {
+  from {
+    opacity: 0;
+
+    transform:
+      translateX(35px)
+      scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateX(0)
+      scale(1);
+  }
+}
+
+@keyframes postiva-toast-progress {
+  from {
+    transform: scaleX(1);
+  }
+
+  to {
+    transform: scaleX(0);
+  }
+}
+
+@media (max-width: 600px) {
+  .postiva-toast-layer {
+    top: 12px;
+    right: 12px;
+
+    width: calc(100vw - 24px);
+  }
+}

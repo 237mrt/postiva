@@ -1,5 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
-
+import { useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import Sidebar from './components/Sidebar'
 import Topbar from './components/Topbar'
 import ConfirmDialog from './components/ConfirmDialog'
@@ -8,6 +7,8 @@ import NoteModal from './components/NoteModal'
 import TrashView from './components/TrashView'
 import NotesView from './components/NotesView'
 import BoardModal from './components/BoardModal'
+import ToastNotification from './components/ToastNotification'
+import notificationSound from './assets/sounds/postiva-notification.mp3'
 
 const normalizeSearchText = (value) => {
   return String(value ?? '')
@@ -89,6 +90,10 @@ function App() {
 
   const [currentTime, setCurrentTime] = useState(Date.now())
 
+  const sentNotificationKeys = useRef(new Set())
+  const notificationAudioRef = useRef(null)
+  const [toastQueue, setToastQueue] = useState([])
+
   const [sortMode, setSortMode] = useState('updated-desc')
 
   const [isBoardModalOpen, setIsBoardModalOpen] = useState(false)
@@ -119,6 +124,8 @@ function App() {
 
   const [appError, setAppError] = useState('')
 
+  const activeToast = toastQueue.length > 0 ? toastQueue[0] : null
+
   useEffect(() => {
     loadNotes()
     loadDeletedNotes()
@@ -134,6 +141,141 @@ function App() {
       window.clearInterval(timer)
     }
   }, [])
+
+  // Bildirim sesi
+  useEffect(() => {
+    const audio = new Audio(notificationSound)
+
+    audio.preload = 'auto'
+    audio.volume = 0.45
+
+    notificationAudioRef.current = audio
+
+    return () => {
+      audio.pause()
+      notificationAudioRef.current = null
+    }
+  }, [])
+
+  const playNotificationSound = useCallback(async () => {
+    const audio = notificationAudioRef.current
+
+    if (!audio) {
+      return
+    }
+
+    try {
+      audio.currentTime = 0
+
+      await audio.play()
+    } catch (error) {
+      console.warn('[Postiva] Bildirim sesi oynatılamadı:', error)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (isLoading) {
+      return
+    }
+
+    const showDueNotifications = async () => {
+      /*
+       * Not zamanı geçtikten sonra iki dakika
+       * boyunca bildirim için uygun kabul edilir.
+       */
+      const notificationWindow = 2 * 60 * 1000
+
+      const dueNotes = notes.filter((note) => {
+        if (note.isCompleted || !note.dueDate) {
+          return false
+        }
+
+        const dueDateTime = new Date(note.dueDate).getTime()
+
+        if (Number.isNaN(dueDateTime)) {
+          return false
+        }
+
+        const elapsedTime = currentTime - dueDateTime
+
+        return elapsedTime >= 0 && elapsedTime <= notificationWindow
+      })
+
+      for (const note of dueNotes) {
+        const notificationKey = `${note.id}:${note.dueDate}`
+
+        if (sentNotificationKeys.current.has(notificationKey)) {
+          continue
+        }
+
+        sentNotificationKeys.current.add(notificationKey)
+
+        await playNotificationSound()
+
+        const isPostivaFocused = document.visibilityState === 'visible' && document.hasFocus()
+
+        /*
+         * Postiva ekranda ve odaktaysa
+         * özel tasarım bildirimi göster.
+         */
+        if (isPostivaFocused) {
+          setToastQueue((currentQueue) => {
+            const alreadyQueued = currentQueue.some((item) => item.key === notificationKey)
+
+            if (alreadyQueued) {
+              return currentQueue
+            }
+
+            return [
+              ...currentQueue,
+              {
+                key: notificationKey,
+                note
+              }
+            ]
+          })
+
+          continue
+        }
+
+        /*
+         * Uygulama arka plandaysa
+         * Windows bildirimini göster.
+         */
+        try {
+          if (!window.api?.notifications?.show) {
+            throw new Error('Bildirim API bağlantısı bulunamadı.')
+          }
+
+          const response = await window.api.notifications.show({
+            title: 'Postiva',
+            body: `"${note.title}" notunun zamanı geldi.`,
+            silent: true
+          })
+
+          if (!response?.ok) {
+            throw new Error(response?.error ?? 'Bildirim gösterilemedi.')
+          }
+        } catch (error) {
+          sentNotificationKeys.current.delete(notificationKey)
+
+          console.error('[Postiva] Hatırlatma bildirimi gönderilemedi:', error)
+        }
+      }
+    }
+
+    showDueNotifications()
+  }, [notes, currentTime, isLoading, playNotificationSound])
+
+  useEffect(() => {
+    setToastQueue((currentQueue) =>
+      currentQueue.filter((notification) => {
+        const currentNote = notes.find((note) => note.id === notification.note.id)
+
+        return currentNote && !currentNote.isCompleted
+      })
+    )
+  }, [notes])
 
   const unwrapResponse = (response) => {
     if (!response?.ok) {
@@ -560,6 +702,26 @@ function App() {
     }
   }
 
+  const closeCurrentToast = () => {
+    setToastQueue((currentQueue) => currentQueue.slice(1))
+  }
+
+  const openToastNote = (note) => {
+    closeCurrentToast()
+
+    const currentNote = notes.find((item) => item.id === note.id) ?? note
+
+    openEditNoteModal(currentNote)
+  }
+
+  const completeToastNote = async (note) => {
+    const currentNote = notes.find((item) => item.id === note.id) ?? note
+
+    await toggleNoteCompleted(currentNote)
+
+    closeCurrentToast()
+  }
+
   const toggleNotePinned = async (note) => {
     setAppError('')
 
@@ -772,6 +934,15 @@ function App() {
           onToggleComplete={toggleNoteCompleted}
           onShowToday={() => navigateTo('today')}
           onShowUpcoming={() => navigateTo('upcoming')}
+        />
+      )}
+      {activeToast && (
+        <ToastNotification
+          key={activeToast.key}
+          notification={activeToast}
+          onClose={closeCurrentToast}
+          onOpen={openToastNote}
+          onComplete={completeToastNote}
         />
       )}
 
