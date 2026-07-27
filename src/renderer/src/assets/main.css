@@ -3508,3 +3508,98 @@ body {
   font-size: 6px;
   line-height: 1;
 }
+
+/* ========================================
+   NOT SIRALAMA MENÜSÜ
+======================================== */
+
+.board-heading-title {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+}
+
+.board-heading-controls {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.board-heading-controls > p {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.notes-sort-field {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+}
+
+.notes-sort-field > span {
+  color: var(--muted);
+
+  font-family: "VT323", monospace;
+  font-size: 17px;
+}
+
+.notes-sort-field select {
+  min-height: 36px;
+  padding: 6px 31px 6px 10px;
+
+  cursor: pointer;
+  outline: none;
+
+  color: #ddd7f2;
+  background: rgba(8, 9, 23, 0.42);
+
+  border: 1px solid
+    rgba(157, 140, 255, 0.22);
+  border-radius: 9px;
+
+  font-family: "VT323", monospace;
+  font-size: 18px;
+
+  color-scheme: dark;
+
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.notes-sort-field select:hover,
+.notes-sort-field select:focus {
+  border-color: rgba(
+    157,
+    140,
+    255,
+    0.62
+  );
+}
+
+.notes-sort-field select:focus {
+  box-shadow:
+    0 0 0 3px
+      rgba(157, 140, 255, 0.08);
+}
+
+.notes-sort-field option {
+  color: #f5f1ff;
+  background: #202138;
+}
+
+@media (max-width: 800px) {
+  .board-heading {
+    align-items: flex-start;
+  }
+
+  .board-heading-controls {
+    flex-direction: column;
+    gap: 7px;
+    align-items: flex-end;
+  }
+
+  .notes-sort-field > span {
+    display: none;
+  }
+}

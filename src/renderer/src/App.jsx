@@ -1,622 +1,651 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from 'react'
 
-import Sidebar from "./components/Sidebar";
-import Topbar from "./components/Topbar";
-import ConfirmDialog from "./components/ConfirmDialog";
-import RightPanel from "./components/RightPanel";
-import NoteModal from "./components/NoteModal";
-import TrashView from "./components/TrashView";
-import NotesView from "./components/NotesView";
-import BoardModal from "./components/BoardModal";
+import Sidebar from './components/Sidebar'
+import Topbar from './components/Topbar'
+import ConfirmDialog from './components/ConfirmDialog'
+import RightPanel from './components/RightPanel'
+import NoteModal from './components/NoteModal'
+import TrashView from './components/TrashView'
+import NotesView from './components/NotesView'
+import BoardModal from './components/BoardModal'
 
 const normalizeSearchText = (value) => {
-  return String(value ?? "")
-    .toLocaleLowerCase("tr-TR")
-    .trim();
-};
+  return String(value ?? '')
+    .toLocaleLowerCase('tr-TR')
+    .trim()
+}
 
 const searchNotes = (noteList, searchQuery) => {
-  const normalizedQuery = normalizeSearchText(searchQuery);
+  const normalizedQuery = normalizeSearchText(searchQuery)
 
   if (!normalizedQuery) {
-    return noteList;
+    return noteList
   }
 
   return noteList.filter((note) => {
     const searchableText = [
       note.title,
-      ...(Array.isArray(note.content) ? note.content : [note.content]),
+      ...(Array.isArray(note.content) ? note.content : [note.content])
     ]
       .map(normalizeSearchText)
-      .join(" ");
+      .join(' ')
 
-    return searchableText.includes(normalizedQuery);
-  });
-};
+    return searchableText.includes(normalizedQuery)
+  })
+}
 
 const isSameLocalDay = (dateValue, targetDate = new Date()) => {
   if (!dateValue) {
-    return false;
+    return false
   }
 
-  const date = new Date(dateValue);
+  const date = new Date(dateValue)
 
   if (Number.isNaN(date.getTime())) {
-    return false;
+    return false
   }
 
   return (
     date.getFullYear() === targetDate.getFullYear() &&
     date.getMonth() === targetDate.getMonth() &&
     date.getDate() === targetDate.getDate()
-  );
-};
+  )
+}
+
+const priorityWeights = {
+  high: 3,
+  normal: 2,
+  low: 1
+}
+
+const getDateTime = (dateValue, fallbackValue = 0) => {
+  if (!dateValue) {
+    return fallbackValue
+  }
+
+  const dateTime = new Date(dateValue).getTime()
+
+  return Number.isNaN(dateTime) ? fallbackValue : dateTime
+}
 
 function App() {
-  const [boards, setBoards] = useState([]);
+  const [boards, setBoards] = useState([])
 
-  const [editingBoard, setEditingBoard] = useState(null);
+  const [editingBoard, setEditingBoard] = useState(null)
 
-  const [isBoardModalOpen, setIsBoardModalOpen] = useState(false);
+  const [sortMode, setSortMode] = useState('updated-desc')
 
-  const [isBoardsLoading, setIsBoardsLoading] = useState(true);
-  const [notes, setNotes] = useState([]);
-  const [deletedNotes, setDeletedNotes] = useState([]);
+  const [isBoardModalOpen, setIsBoardModalOpen] = useState(false)
 
-  const [activeView, setActiveView] = useState("home");
+  const [isBoardsLoading, setIsBoardsLoading] = useState(true)
+  const [notes, setNotes] = useState([])
+  const [deletedNotes, setDeletedNotes] = useState([])
 
-  const [selectedBoardId, setSelectedBoardId] = useState(null);
+  const [activeView, setActiveView] = useState('home')
 
-  const [boardPendingDelete, setBoardPendingDelete] = useState(null);
+  const [selectedBoardId, setSelectedBoardId] = useState(null)
 
-  const [searchQuery, setSearchQuery] = useState("");
+  const [boardPendingDelete, setBoardPendingDelete] = useState(null)
 
-  const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('')
 
-  const [selectedNote, setSelectedNote] = useState(null);
+  const [isNoteModalOpen, setIsNoteModalOpen] = useState(false)
 
-  const [notePendingDelete, setNotePendingDelete] = useState(null);
+  const [selectedNote, setSelectedNote] = useState(null)
 
-  const [notePendingPermanentDelete, setNotePendingPermanentDelete] =
-    useState(null);
+  const [notePendingDelete, setNotePendingDelete] = useState(null)
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [notePendingPermanentDelete, setNotePendingPermanentDelete] = useState(null)
 
-  const [isTrashLoading, setIsTrashLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true)
 
-  const [appError, setAppError] = useState("");
+  const [isTrashLoading, setIsTrashLoading] = useState(true)
+
+  const [appError, setAppError] = useState('')
 
   useEffect(() => {
-    loadNotes();
-    loadDeletedNotes();
-    loadBoards();
-  }, []);
+    loadNotes()
+    loadDeletedNotes()
+    loadBoards()
+  }, [])
 
   const unwrapResponse = (response) => {
     if (!response?.ok) {
-      throw new Error(response?.error ?? "İşlem tamamlanamadı.");
+      throw new Error(response?.error ?? 'İşlem tamamlanamadı.')
     }
 
-    return response.data;
-  };
+    return response.data
+  }
 
   const ensureNotesApi = () => {
     if (!window.api?.notes) {
-      throw new Error("Postiva dosya sistemi bağlantısı bulunamadı.");
+      throw new Error('Postiva dosya sistemi bağlantısı bulunamadı.')
     }
-  };
+  }
 
   const loadNotes = async () => {
-    setIsLoading(true);
+    setIsLoading(true)
 
     try {
-      ensureNotesApi();
+      ensureNotesApi()
 
-      const response = await window.api.notes.list();
+      const response = await window.api.notes.list()
 
-      setNotes(unwrapResponse(response));
+      setNotes(unwrapResponse(response))
     } catch (error) {
-      console.error(error);
-      setAppError(error.message);
+      console.error(error)
+      setAppError(error.message)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const loadDeletedNotes = async () => {
-    setIsTrashLoading(true);
+    setIsTrashLoading(true)
 
     try {
-      ensureNotesApi();
+      ensureNotesApi()
 
-      const response = await window.api.notes.listDeleted();
+      const response = await window.api.notes.listDeleted()
 
-      setDeletedNotes(unwrapResponse(response));
+      setDeletedNotes(unwrapResponse(response))
     } catch (error) {
-      console.error(error);
-      setAppError(error.message);
+      console.error(error)
+      setAppError(error.message)
     } finally {
-      setIsTrashLoading(false);
+      setIsTrashLoading(false)
     }
-  };
+  }
 
   const loadBoards = async () => {
-    setIsBoardsLoading(true);
+    setIsBoardsLoading(true)
 
     try {
       if (!window.api?.boards) {
-        throw new Error("Postiva pano sistemi bağlantısı bulunamadı.");
+        throw new Error('Postiva pano sistemi bağlantısı bulunamadı.')
       }
 
-      const response = await window.api.boards.list();
+      const response = await window.api.boards.list()
 
-      const savedBoards = unwrapResponse(response);
+      const savedBoards = unwrapResponse(response)
 
-      setBoards(Array.isArray(savedBoards) ? savedBoards : []);
+      setBoards(Array.isArray(savedBoards) ? savedBoards : [])
     } catch (error) {
-      console.error("[Postiva] Panolar yüklenemedi:", error);
+      console.error('[Postiva] Panolar yüklenemedi:', error)
 
-      setAppError(error.message);
+      setAppError(error.message)
     } finally {
-      setIsBoardsLoading(false);
+      setIsBoardsLoading(false)
     }
-  };
+  }
 
   const todayNotes = useMemo(() => {
-    return notes.filter(
-      (note) => !note.isCompleted && isSameLocalDay(note.dueDate),
-    );
-  }, [notes]);
+    return notes.filter((note) => !note.isCompleted && isSameLocalDay(note.dueDate))
+  }, [notes])
 
   const upcomingNotes = useMemo(() => {
-    const endOfToday = new Date();
+    const endOfToday = new Date()
 
-    endOfToday.setHours(23, 59, 59, 999);
+    endOfToday.setHours(23, 59, 59, 999)
 
     return notes
       .filter((note) => {
         if (note.isCompleted || !note.dueDate) {
-          return false;
+          return false
         }
 
-        const dueDate = new Date(note.dueDate);
+        const dueDate = new Date(note.dueDate)
 
-        return !Number.isNaN(dueDate.getTime()) && dueDate > endOfToday;
+        return !Number.isNaN(dueDate.getTime()) && dueDate > endOfToday
       })
-      .sort(
-        (firstNote, secondNote) =>
-          new Date(firstNote.dueDate) - new Date(secondNote.dueDate),
-      );
-  }, [notes]);
+      .sort((firstNote, secondNote) => new Date(firstNote.dueDate) - new Date(secondNote.dueDate))
+  }, [notes])
 
   const completedNotes = useMemo(() => {
-    return notes.filter((note) => note.isCompleted);
-  }, [notes]);
+    return notes.filter((note) => note.isCompleted)
+  }, [notes])
 
   const boardsWithCounts = useMemo(() => {
     return boards.map((board) => ({
       ...board,
 
-      noteCount: notes.filter((note) => note.boardId === board.id).length,
-    }));
-  }, [boards, notes]);
+      noteCount: notes.filter((note) => note.boardId === board.id).length
+    }))
+  }, [boards, notes])
 
   const currentBoard = useMemo(() => {
-    return boards.find((board) => board.id === selectedBoardId) ?? null;
-  }, [boards, selectedBoardId]);
+    return boards.find((board) => board.id === selectedBoardId) ?? null
+  }, [boards, selectedBoardId])
 
   const currentViewNotes = useMemo(() => {
     switch (activeView) {
-      case "today":
-        return todayNotes;
+      case 'today':
+        return todayNotes
 
-      case "upcoming":
-        return upcomingNotes;
+      case 'upcoming':
+        return upcomingNotes
 
-      case "completed":
-        return completedNotes;
+      case 'completed':
+        return completedNotes
 
-      case "board":
-        return notes.filter((note) => note.boardId === selectedBoardId);
+      case 'board':
+        return notes.filter((note) => note.boardId === selectedBoardId)
 
       default:
-        return notes;
+        return notes
     }
-  }, [
-    activeView,
-    notes,
-    todayNotes,
-    upcomingNotes,
-    completedNotes,
-    selectedBoardId,
-  ]);
+  }, [activeView, notes, todayNotes, upcomingNotes, completedNotes, selectedBoardId])
 
   const filteredNotes = useMemo(() => {
-    const searchedNotes = searchNotes(currentViewNotes, searchQuery);
+    const searchedNotes = searchNotes(currentViewNotes, searchQuery)
 
     return [...searchedNotes].sort((firstNote, secondNote) => {
-      if (firstNote.isPinned !== secondNote.isPinned) {
-        return Number(secondNote.isPinned) - Number(firstNote.isPinned);
+      /*
+       * Sabitlenen notlar her zaman
+       * listenin en üstünde bulunur.
+       */
+      if (Boolean(firstNote.isPinned) !== Boolean(secondNote.isPinned)) {
+        return Number(Boolean(secondNote.isPinned)) - Number(Boolean(firstNote.isPinned))
       }
 
-      return new Date(secondNote.updatedAt) - new Date(firstNote.updatedAt);
-    });
-  }, [currentViewNotes, searchQuery]);
+      switch (sortMode) {
+        case 'created-desc':
+          return getDateTime(secondNote.createdAt) - getDateTime(firstNote.createdAt)
+
+        case 'due-asc': {
+          const firstHasDueDate = Boolean(firstNote.dueDate)
+
+          const secondHasDueDate = Boolean(secondNote.dueDate)
+
+          if (firstHasDueDate !== secondHasDueDate) {
+            return firstHasDueDate ? -1 : 1
+          }
+
+          if (!firstHasDueDate && !secondHasDueDate) {
+            return getDateTime(secondNote.updatedAt) - getDateTime(firstNote.updatedAt)
+          }
+
+          return (
+            getDateTime(firstNote.dueDate, Number.MAX_SAFE_INTEGER) -
+            getDateTime(secondNote.dueDate, Number.MAX_SAFE_INTEGER)
+          )
+        }
+
+        case 'priority-desc': {
+          const firstPriority = priorityWeights[firstNote.priority] ?? priorityWeights.normal
+
+          const secondPriority = priorityWeights[secondNote.priority] ?? priorityWeights.normal
+
+          if (firstPriority !== secondPriority) {
+            return secondPriority - firstPriority
+          }
+
+          return getDateTime(secondNote.updatedAt) - getDateTime(firstNote.updatedAt)
+        }
+
+        case 'title-asc':
+          return String(firstNote.title ?? '').localeCompare(
+            String(secondNote.title ?? ''),
+            'tr-TR'
+          )
+
+        case 'updated-desc':
+        default:
+          return getDateTime(secondNote.updatedAt) - getDateTime(firstNote.updatedAt)
+      }
+    })
+  }, [currentViewNotes, searchQuery, sortMode])
 
   const filteredDeletedNotes = useMemo(() => {
-    return searchNotes(deletedNotes, searchQuery);
-  }, [deletedNotes, searchQuery]);
+    return searchNotes(deletedNotes, searchQuery)
+  }, [deletedNotes, searchQuery])
 
   const viewSettings = {
     home: {
-      title: "Notların",
-      icon: "✦",
-      emptyTitle: "Henüz notun yok",
-      emptyMessage: "İlk post-it notunu oluşturarak başlayabilirsin.",
+      title: 'Notların',
+      icon: '✦',
+      emptyTitle: 'Henüz notun yok',
+      emptyMessage: 'İlk post-it notunu oluşturarak başlayabilirsin.'
     },
 
     today: {
-      title: "Bugün",
-      icon: "📅",
-      emptyTitle: "Bugün için görev yok",
-      emptyMessage: "Bugüne ait son tarihi bulunan aktif bir not yok.",
+      title: 'Bugün',
+      icon: '📅',
+      emptyTitle: 'Bugün için görev yok',
+      emptyMessage: 'Bugüne ait son tarihi bulunan aktif bir not yok.'
     },
 
     upcoming: {
-      title: "Yaklaşanlar",
-      icon: "⏰",
-      emptyTitle: "Yaklaşan görev yok",
-      emptyMessage: "İleriki tarihlere planlanmış bir not bulunmuyor.",
+      title: 'Yaklaşanlar',
+      icon: '⏰',
+      emptyTitle: 'Yaklaşan görev yok',
+      emptyMessage: 'İleriki tarihlere planlanmış bir not bulunmuyor.'
     },
 
     completed: {
-      title: "Tamamlananlar",
-      icon: "✅",
-      emptyTitle: "Tamamlanan not yok",
-      emptyMessage: "Tamamladığın notlar burada görünecek.",
-    },
-  };
+      title: 'Tamamlananlar',
+      icon: '✅',
+      emptyTitle: 'Tamamlanan not yok',
+      emptyMessage: 'Tamamladığın notlar burada görünecek.'
+    }
+  }
 
   const navigateTo = (view) => {
-    setActiveView(view);
-    setSelectedBoardId(null);
-    setSearchQuery("");
-    setAppError("");
+    setActiveView(view)
+    setSelectedBoardId(null)
+    setSearchQuery('')
+    setAppError('')
 
-    if (view === "trash") {
-      loadDeletedNotes();
+    if (view === 'trash') {
+      loadDeletedNotes()
     }
-  };
+  }
 
   const openBoardView = (boardId) => {
-    setSelectedBoardId(boardId);
-    setActiveView("board");
-    setSearchQuery("");
-    setAppError("");
-  };
+    setSelectedBoardId(boardId)
+    setActiveView('board')
+    setSearchQuery('')
+    setAppError('')
+  }
 
   const openNewNoteModal = () => {
-    setSelectedNote(null);
-    setIsNoteModalOpen(true);
-  };
+    setSelectedNote(null)
+    setIsNoteModalOpen(true)
+  }
 
   const openBoardModal = () => {
-    setEditingBoard(null);
-    setIsBoardModalOpen(true);
-  };
+    setEditingBoard(null)
+    setIsBoardModalOpen(true)
+  }
 
   const openEditBoardModal = (board) => {
-    setEditingBoard(board);
-    setIsBoardModalOpen(true);
-  };
+    setEditingBoard(board)
+    setIsBoardModalOpen(true)
+  }
 
   const closeBoardModal = () => {
-    setIsBoardModalOpen(false);
-    setEditingBoard(null);
-  };
+    setIsBoardModalOpen(false)
+    setEditingBoard(null)
+  }
 
   const saveBoard = async (boardData) => {
-    setAppError("");
+    setAppError('')
 
     try {
       if (!window.api?.boards) {
-        throw new Error("Postiva pano sistemi bağlantısı bulunamadı.");
+        throw new Error('Postiva pano sistemi bağlantısı bulunamadı.')
       }
 
       if (editingBoard) {
-        const response = await window.api.boards.update(
-          editingBoard.id,
-          boardData,
-        );
+        const response = await window.api.boards.update(editingBoard.id, boardData)
 
-        const updatedBoard = unwrapResponse(response);
+        const updatedBoard = unwrapResponse(response)
 
         setBoards((currentBoards) =>
-          currentBoards.map((board) =>
-            board.id === updatedBoard.id ? updatedBoard : board,
-          ),
-        );
+          currentBoards.map((board) => (board.id === updatedBoard.id ? updatedBoard : board))
+        )
       } else {
-        const response = await window.api.boards.create(boardData);
+        const response = await window.api.boards.create(boardData)
 
-        const createdBoard = unwrapResponse(response);
+        const createdBoard = unwrapResponse(response)
 
-        setBoards((currentBoards) => [...currentBoards, createdBoard]);
+        setBoards((currentBoards) => [...currentBoards, createdBoard])
       }
 
-      closeBoardModal();
+      closeBoardModal()
     } catch (error) {
-      console.error("[Postiva] Pano kaydedilemedi:", error);
+      console.error('[Postiva] Pano kaydedilemedi:', error)
 
-      setAppError(error.message);
+      setAppError(error.message)
     }
-  };
+  }
 
   const requestDeleteBoard = (board) => {
-    setBoardPendingDelete(board);
-    closeBoardModal();
-  };
+    setBoardPendingDelete(board)
+    closeBoardModal()
+  }
 
   const cancelDeleteBoard = () => {
-    setBoardPendingDelete(null);
-  };
+    setBoardPendingDelete(null)
+  }
 
   const confirmDeleteBoard = async () => {
     if (!boardPendingDelete) {
-      return;
+      return
     }
 
-    setAppError("");
+    setAppError('')
 
     try {
       if (!window.api?.boards) {
-        throw new Error("Postiva pano sistemi bağlantısı bulunamadı.");
+        throw new Error('Postiva pano sistemi bağlantısı bulunamadı.')
       }
 
-      const deletedBoardId = boardPendingDelete.id;
+      const deletedBoardId = boardPendingDelete.id
 
-      const response = await window.api.boards.delete(deletedBoardId);
+      const response = await window.api.boards.delete(deletedBoardId)
 
-      unwrapResponse(response);
+      unwrapResponse(response)
 
-      setBoards((currentBoards) =>
-        currentBoards.filter((board) => board.id !== deletedBoardId),
-      );
+      setBoards((currentBoards) => currentBoards.filter((board) => board.id !== deletedBoardId))
 
       setNotes((currentNotes) =>
         currentNotes.map((note) =>
           note.boardId === deletedBoardId
             ? {
                 ...note,
-                boardId: null,
+                boardId: null
               }
-            : note,
-        ),
-      );
+            : note
+        )
+      )
 
-      if (activeView === "board" && selectedBoardId === deletedBoardId) {
-        setActiveView("home");
-        setSelectedBoardId(null);
-        setSearchQuery("");
+      if (activeView === 'board' && selectedBoardId === deletedBoardId) {
+        setActiveView('home')
+        setSelectedBoardId(null)
+        setSearchQuery('')
       }
 
-      setBoardPendingDelete(null);
+      setBoardPendingDelete(null)
     } catch (error) {
-      console.error("[Postiva] Pano silinemedi:", error);
+      console.error('[Postiva] Pano silinemedi:', error)
 
-      setAppError(error.message);
-      setBoardPendingDelete(null);
+      setAppError(error.message)
+      setBoardPendingDelete(null)
     }
-  };
+  }
 
   const openEditNoteModal = (note) => {
-    setSelectedNote(note);
-    setIsNoteModalOpen(true);
-  };
+    setSelectedNote(note)
+    setIsNoteModalOpen(true)
+  }
 
   const closeNoteModal = () => {
-    setIsNoteModalOpen(false);
-    setSelectedNote(null);
-  };
+    setIsNoteModalOpen(false)
+    setSelectedNote(null)
+  }
 
   const saveNote = async (noteData) => {
-    setAppError("");
+    setAppError('')
 
     try {
-      ensureNotesApi();
+      ensureNotesApi()
 
       if (selectedNote) {
-        const response = await window.api.notes.update(
-          selectedNote.id,
-          noteData,
-        );
+        const response = await window.api.notes.update(selectedNote.id, noteData)
 
-        const updatedNote = unwrapResponse(response);
+        const updatedNote = unwrapResponse(response)
 
         setNotes((currentNotes) =>
-          currentNotes.map((note) =>
-            note.id === updatedNote.id ? updatedNote : note,
-          ),
-        );
+          currentNotes.map((note) => (note.id === updatedNote.id ? updatedNote : note))
+        )
       } else {
         const response = await window.api.notes.create({
           ...noteData,
-          decoration: "✦",
-        });
+          decoration: '✦'
+        })
 
-        const createdNote = unwrapResponse(response);
+        const createdNote = unwrapResponse(response)
 
-        setNotes((currentNotes) => [...currentNotes, createdNote]);
+        setNotes((currentNotes) => [...currentNotes, createdNote])
       }
 
-      closeNoteModal();
+      closeNoteModal()
     } catch (error) {
-      console.error(error);
-      setAppError(error.message);
+      console.error(error)
+      setAppError(error.message)
     }
-  };
+  }
 
   const toggleNoteCompleted = async (note) => {
-    setAppError("");
+    setAppError('')
 
     try {
-      ensureNotesApi();
+      ensureNotesApi()
 
       const response = await window.api.notes.update(note.id, {
-        isCompleted: !note.isCompleted,
-      });
+        isCompleted: !note.isCompleted
+      })
 
-      const updatedNote = unwrapResponse(response);
+      const updatedNote = unwrapResponse(response)
 
       setNotes((currentNotes) =>
-        currentNotes.map((item) =>
-          item.id === updatedNote.id ? updatedNote : item,
-        ),
-      );
+        currentNotes.map((item) => (item.id === updatedNote.id ? updatedNote : item))
+      )
     } catch (error) {
-      console.error(error);
-      setAppError(error.message);
+      console.error(error)
+      setAppError(error.message)
     }
-  };
+  }
 
   const toggleNotePinned = async (note) => {
-    setAppError("");
+    setAppError('')
 
     try {
-      ensureNotesApi();
+      ensureNotesApi()
 
       const response = await window.api.notes.update(note.id, {
-        isPinned: !note.isPinned,
-      });
+        isPinned: !note.isPinned
+      })
 
-      const updatedNote = unwrapResponse(response);
+      const updatedNote = unwrapResponse(response)
 
       setNotes((currentNotes) =>
-        currentNotes.map((item) =>
-          item.id === updatedNote.id ? updatedNote : item,
-        ),
-      );
+        currentNotes.map((item) => (item.id === updatedNote.id ? updatedNote : item))
+      )
     } catch (error) {
-      console.error("[Postiva] Not sabitlenemedi:", error);
+      console.error('[Postiva] Not sabitlenemedi:', error)
 
-      setAppError(error.message);
+      setAppError(error.message)
     }
-  };
+  }
 
   const requestDeleteNote = (note) => {
-    setNotePendingDelete(note);
-  };
+    setNotePendingDelete(note)
+  }
 
   const cancelDeleteNote = () => {
-    setNotePendingDelete(null);
-  };
+    setNotePendingDelete(null)
+  }
 
   const confirmDeleteNote = async () => {
     if (!notePendingDelete) {
-      return;
+      return
     }
 
     try {
-      ensureNotesApi();
+      ensureNotesApi()
 
-      const response = await window.api.notes.moveToTrash(notePendingDelete.id);
+      const response = await window.api.notes.moveToTrash(notePendingDelete.id)
 
-      const deletedNote = unwrapResponse(response);
+      const deletedNote = unwrapResponse(response)
 
-      setNotes((currentNotes) =>
-        currentNotes.filter((note) => note.id !== deletedNote.id),
-      );
+      setNotes((currentNotes) => currentNotes.filter((note) => note.id !== deletedNote.id))
 
       setDeletedNotes((currentNotes) => [
         ...currentNotes.filter((note) => note.id !== deletedNote.id),
-        deletedNote,
-      ]);
+        deletedNote
+      ])
 
-      setNotePendingDelete(null);
-      closeNoteModal();
+      setNotePendingDelete(null)
+      closeNoteModal()
     } catch (error) {
-      console.error(error);
-      setAppError(error.message);
-      setNotePendingDelete(null);
+      console.error(error)
+      setAppError(error.message)
+      setNotePendingDelete(null)
     }
-  };
+  }
 
   const restoreNote = async (note) => {
-    setAppError("");
+    setAppError('')
 
     try {
-      ensureNotesApi();
+      ensureNotesApi()
 
-      const response = await window.api.notes.restore(note.id);
+      const response = await window.api.notes.restore(note.id)
 
-      const restoredNote = unwrapResponse(response);
+      const restoredNote = unwrapResponse(response)
 
-      setDeletedNotes((currentNotes) =>
-        currentNotes.filter((item) => item.id !== restoredNote.id),
-      );
+      setDeletedNotes((currentNotes) => currentNotes.filter((item) => item.id !== restoredNote.id))
 
       setNotes((currentNotes) => [
         ...currentNotes.filter((item) => item.id !== restoredNote.id),
-        restoredNote,
-      ]);
+        restoredNote
+      ])
     } catch (error) {
-      console.error(error);
-      setAppError(error.message);
+      console.error(error)
+      setAppError(error.message)
     }
-  };
+  }
 
   const requestPermanentDelete = (note) => {
-    setNotePendingPermanentDelete(note);
-  };
+    setNotePendingPermanentDelete(note)
+  }
 
   const cancelPermanentDelete = () => {
-    setNotePendingPermanentDelete(null);
-  };
+    setNotePendingPermanentDelete(null)
+  }
 
   const confirmPermanentDelete = async () => {
     if (!notePendingPermanentDelete) {
-      return;
+      return
     }
 
     try {
-      ensureNotesApi();
+      ensureNotesApi()
 
-      const response = await window.api.notes.permanentlyDelete(
-        notePendingPermanentDelete.id,
-      );
+      const response = await window.api.notes.permanentlyDelete(notePendingPermanentDelete.id)
 
-      unwrapResponse(response);
+      unwrapResponse(response)
 
       setDeletedNotes((currentNotes) =>
-        currentNotes.filter(
-          (note) => note.id !== notePendingPermanentDelete.id,
-        ),
-      );
+        currentNotes.filter((note) => note.id !== notePendingPermanentDelete.id)
+      )
 
-      setNotePendingPermanentDelete(null);
+      setNotePendingPermanentDelete(null)
     } catch (error) {
-      console.error(error);
-      setAppError(error.message);
-      setNotePendingPermanentDelete(null);
+      console.error(error)
+      setAppError(error.message)
+      setNotePendingPermanentDelete(null)
     }
-  };
+  }
 
   const currentSettings =
-    activeView === "board"
+    activeView === 'board'
       ? {
-          title: currentBoard?.name ?? "Pano",
-          icon: currentBoard?.icon ?? "📌",
-          emptyTitle: "Bu pano henüz boş",
+          title: currentBoard?.name ?? 'Pano',
+          icon: currentBoard?.icon ?? '📌',
+          emptyTitle: 'Bu pano henüz boş',
           emptyMessage: currentBoard
             ? `${currentBoard.name} panosuna ilk notunu ekleyebilirsin.`
-            : "Bu panoya henüz bir not eklenmemiş.",
+            : 'Bu panoya henüz bir not eklenmemiş.'
         }
-      : (viewSettings[activeView] ?? viewSettings.home);
+      : (viewSettings[activeView] ?? viewSettings.home)
 
-  const isSecondaryView = activeView !== "home";
+  const isSecondaryView = activeView !== 'home'
 
   return (
-    <div className={`app ${isSecondaryView ? "app-secondary-view" : ""}`}>
+    <div className={`app ${isSecondaryView ? 'app-secondary-view' : ''}`}>
       <Sidebar
         boards={boardsWithCounts}
         activeView={activeView}
@@ -625,7 +654,7 @@ function App() {
           today: todayNotes.length,
           upcoming: upcomingNotes.length,
           completed: completedNotes.length,
-          trash: deletedNotes.length,
+          trash: deletedNotes.length
         }}
         onNavigate={navigateTo}
         onCreateBoard={openBoardModal}
@@ -636,11 +665,11 @@ function App() {
       <main className="workspace">
         <Topbar
           onNewNote={openNewNoteModal}
-          showNewNote={activeView === "home" || activeView === "board"}
+          showNewNote={activeView === 'home' || activeView === 'board'}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           searchPlaceholder={
-            activeView === "trash"
+            activeView === 'trash'
               ? "Çöp Kutusu'nda ara..."
               : `${currentSettings.title} içinde ara...`
           }
@@ -652,14 +681,14 @@ function App() {
               <span>!</span>
               <p>{appError}</p>
 
-              <button type="button" onClick={() => setAppError("")}>
+              <button type="button" onClick={() => setAppError('')}>
                 ×
               </button>
             </div>
           </div>
         )}
 
-        {activeView === "trash" ? (
+        {activeView === 'trash' ? (
           <TrashView
             notes={filteredDeletedNotes}
             totalCount={deletedNotes.length}
@@ -679,30 +708,32 @@ function App() {
             isLoading={isLoading}
             emptyTitle={currentSettings.emptyTitle}
             emptyMessage={currentSettings.emptyMessage}
-            showNewNoteButton={activeView === "home" || activeView === "board"}
-            showNightMessage={activeView === "home"}
+            showNewNoteButton={activeView === 'home' || activeView === 'board'}
+            showNightMessage={activeView === 'home'}
             onNewNote={openNewNoteModal}
             onEdit={openEditNoteModal}
             onToggleComplete={toggleNoteCompleted}
             onTogglePin={toggleNotePinned}
+            sortMode={sortMode}
+            onSortChange={setSortMode}
           />
         )}
       </main>
 
-      {activeView === "home" && (
+      {activeView === 'home' && (
         <RightPanel
           todayNotes={todayNotes}
           upcomingNotes={upcomingNotes}
           onEdit={openEditNoteModal}
           onToggleComplete={toggleNoteCompleted}
-          onShowToday={() => navigateTo("today")}
-          onShowUpcoming={() => navigateTo("upcoming")}
+          onShowToday={() => navigateTo('today')}
+          onShowUpcoming={() => navigateTo('upcoming')}
         />
       )}
 
       {isBoardModalOpen && (
         <BoardModal
-          key={editingBoard?.id ?? "new-board"}
+          key={editingBoard?.id ?? 'new-board'}
           board={editingBoard}
           onClose={closeBoardModal}
           onSave={saveBoard}
@@ -712,10 +743,10 @@ function App() {
 
       {isNoteModalOpen && (
         <NoteModal
-          key={selectedNote?.id ?? "new-note"}
+          key={selectedNote?.id ?? 'new-note'}
           note={selectedNote}
           boards={boards}
-          defaultBoardId={activeView === "board" ? selectedBoardId : null}
+          defaultBoardId={activeView === 'board' ? selectedBoardId : null}
           onClose={closeNoteModal}
           onSave={saveNote}
           onDelete={requestDeleteNote}
@@ -758,7 +789,7 @@ function App() {
         />
       )}
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
