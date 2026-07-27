@@ -17,7 +17,8 @@ function NotesView({
   onToggleComplete,
   onTogglePin,
   sortMode,
-  onSortChange
+  onSortChange,
+  currentTime
 }) {
   const isSearching = Boolean(searchQuery.trim())
 
@@ -89,6 +90,7 @@ function NotesView({
                 key={note.id}
                 note={note}
                 board={board}
+                currentTime={currentTime}
                 onEdit={onEdit}
                 onToggleComplete={onToggleComplete}
                 onTogglePin={onTogglePin}

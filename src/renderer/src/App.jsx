@@ -15,6 +15,20 @@ const normalizeSearchText = (value) => {
     .trim()
 }
 
+const isNoteOverdue = (note, referenceTime = Date.now()) => {
+  if (note.isCompleted || !note.dueDate) {
+    return false
+  }
+
+  const dueDateTime = new Date(note.dueDate).getTime()
+
+  if (Number.isNaN(dueDateTime)) {
+    return false
+  }
+
+  return dueDateTime < referenceTime
+}
+
 const searchNotes = (noteList, searchQuery) => {
   const normalizedQuery = normalizeSearchText(searchQuery)
 
@@ -73,6 +87,8 @@ function App() {
 
   const [editingBoard, setEditingBoard] = useState(null)
 
+  const [currentTime, setCurrentTime] = useState(Date.now())
+
   const [sortMode, setSortMode] = useState('updated-desc')
 
   const [isBoardModalOpen, setIsBoardModalOpen] = useState(false)
@@ -107,6 +123,16 @@ function App() {
     loadNotes()
     loadDeletedNotes()
     loadBoards()
+  }, [])
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setCurrentTime(Date.now())
+    }, 60_000)
+
+    return () => {
+      window.clearInterval(timer)
+    }
   }, [])
 
   const unwrapResponse = (response) => {
@@ -205,6 +231,12 @@ function App() {
     return notes.filter((note) => note.isCompleted)
   }, [notes])
 
+  const overdueNotes = useMemo(() => {
+    return notes
+      .filter((note) => isNoteOverdue(note, currentTime))
+      .sort((firstNote, secondNote) => new Date(firstNote.dueDate) - new Date(secondNote.dueDate))
+  }, [notes, currentTime])
+
   const boardsWithCounts = useMemo(() => {
     return boards.map((board) => ({
       ...board,
@@ -221,6 +253,9 @@ function App() {
     switch (activeView) {
       case 'today':
         return todayNotes
+
+      case 'overdue':
+        return overdueNotes
 
       case 'upcoming':
         return upcomingNotes
@@ -313,6 +348,13 @@ function App() {
       icon: '📅',
       emptyTitle: 'Bugün için görev yok',
       emptyMessage: 'Bugüne ait son tarihi bulunan aktif bir not yok.'
+    },
+
+    overdue: {
+      title: 'Gecikenler',
+      icon: '⚠️',
+      emptyTitle: 'Geciken not yok',
+      emptyMessage: 'Harika! Son tarihi geçmiş aktif bir not bulunmuyor.'
     },
 
     upcoming: {
@@ -654,6 +696,7 @@ function App() {
           today: todayNotes.length,
           upcoming: upcomingNotes.length,
           completed: completedNotes.length,
+          overdue: overdueNotes.length,
           trash: deletedNotes.length
         }}
         onNavigate={navigateTo}
@@ -716,6 +759,7 @@ function App() {
             onTogglePin={toggleNotePinned}
             sortMode={sortMode}
             onSortChange={setSortMode}
+            currentTime={currentTime}
           />
         )}
       </main>

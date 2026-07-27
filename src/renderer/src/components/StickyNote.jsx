@@ -1,77 +1,87 @@
-function StickyNote({ note, board, onEdit, onToggleComplete, onTogglePin }) {
+function StickyNote({ note, currentTime, board, onEdit, onToggleComplete, onTogglePin }) {
   const contentItems = Array.isArray(note.content)
     ? note.content
-    : String(note.content ?? "")
-        .split("\n")
+    : String(note.content ?? '')
+        .split('\n')
         .map((item) => item.trim())
-        .filter(Boolean);
+        .filter(Boolean)
 
   const priorityLabels = {
     low: {
-      label: "Düşük",
-      icon: "🌱",
+      label: 'Düşük',
+      icon: '🌱'
     },
 
     normal: {
-      label: "Normal",
-      icon: "⭐",
+      label: 'Normal',
+      icon: '⭐'
     },
 
     high: {
-      label: "Yüksek",
-      icon: "🔥",
-    },
-  };
+      label: 'Yüksek',
+      icon: '🔥'
+    }
+  }
 
-  const priority = priorityLabels[note.priority] ?? priorityLabels.normal;
+  const priority = priorityLabels[note.priority] ?? priorityLabels.normal
 
   const getFormattedDueDate = () => {
     if (!note.dueDate) {
-      return null;
+      return null
     }
 
-    const dueDate = new Date(note.dueDate);
+    const dueDate = new Date(note.dueDate)
 
     if (Number.isNaN(dueDate.getTime())) {
-      return null;
+      return null
     }
 
-    return new Intl.DateTimeFormat("tr-TR", {
-      day: "2-digit",
-      month: "short",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(dueDate);
-  };
+    return new Intl.DateTimeFormat('tr-TR', {
+      day: '2-digit',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(dueDate)
+  }
 
-  const formattedDueDate = getFormattedDueDate();
+  const formattedDueDate = getFormattedDueDate()
+
+  const dueDateTime = note.dueDate ? new Date(note.dueDate).getTime() : null
+
+  const referenceTime = typeof currentTime === 'number' ? currentTime : Date.now()
+
+  const isOverdue =
+    !note.isCompleted &&
+    dueDateTime !== null &&
+    !Number.isNaN(dueDateTime) &&
+    dueDateTime < referenceTime
 
   const handleEdit = (event) => {
-    event?.stopPropagation();
-    onEdit(note);
-  };
+    event?.stopPropagation()
+    onEdit(note)
+  }
 
   const handleTogglePin = (event) => {
-    event.stopPropagation();
-    onTogglePin(note);
-  };
+    event.stopPropagation()
+    onTogglePin(note)
+  }
 
   const handleToggleComplete = (event) => {
-    event.stopPropagation();
-    onToggleComplete(note);
-  };
+    event.stopPropagation()
+    onToggleComplete(note)
+  }
 
   const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      onEdit(note);
+    if (event.key === 'Enter') {
+      onEdit(note)
     }
-  };
+  }
 
   return (
     <article
       className={`sticky-note sticky-note-${note.color} ${
-        note.isCompleted ? "sticky-note-completed" : ""
-      } ${note.isPinned ? "sticky-note-pinned" : ""}`}
+        note.isCompleted ? 'sticky-note-completed' : ''
+      } ${note.isPinned ? 'sticky-note-pinned' : ''} ${isOverdue ? 'sticky-note-overdue' : ''}`}
       onClick={handleEdit}
       onKeyDown={handleKeyDown}
       role="button"
@@ -85,14 +95,12 @@ function StickyNote({ note, board, onEdit, onToggleComplete, onTogglePin }) {
         <div className="sticky-note-actions">
           <button
             type="button"
-            className={`pin-note-button ${note.isPinned ? "active" : ""}`}
+            className={`pin-note-button ${note.isPinned ? 'active' : ''}`}
             onClick={handleTogglePin}
-            aria-label={
-              note.isPinned ? "Notun sabitlemesini kaldır" : "Notu sabitle"
-            }
-            title={note.isPinned ? "Sabitlemeyi kaldır" : "Notu sabitle"}
+            aria-label={note.isPinned ? 'Notun sabitlemesini kaldır' : 'Notu sabitle'}
+            title={note.isPinned ? 'Sabitlemeyi kaldır' : 'Notu sabitle'}
           >
-            {note.isPinned ? "📌" : "📍"}
+            {note.isPinned ? '📌' : '📍'}
           </button>
 
           <button
@@ -115,16 +123,14 @@ function StickyNote({ note, board, onEdit, onToggleComplete, onTogglePin }) {
           </div>
         )}
 
-        <span
-          className={`priority-badge priority-badge-${
-            note.priority ?? "normal"
-          }`}
-        >
+        <span className={`priority-badge priority-badge-${note.priority ?? 'normal'}`}>
           {priority.icon} {priority.label}
         </span>
 
         {formattedDueDate && (
-          <span className="due-date-badge">📅 {formattedDueDate}</span>
+          <span className={`due-date-badge ${isOverdue ? 'due-date-badge-overdue' : ''}`}>
+            {isOverdue ? '⚠️ Gecikti' : '📅'} {formattedDueDate}
+          </span>
         )}
       </div>
 
@@ -141,18 +147,16 @@ function StickyNote({ note, board, onEdit, onToggleComplete, onTogglePin }) {
       <div className="note-footer">
         <button
           type="button"
-          className={`complete-note-button ${
-            note.isCompleted ? "completed" : ""
-          }`}
+          className={`complete-note-button ${note.isCompleted ? 'completed' : ''}`}
           onClick={handleToggleComplete}
         >
-          {note.isCompleted ? "✓ Tamamlandı" : "○ Tamamla"}
+          {note.isCompleted ? '✓ Tamamlandı' : '○ Tamamla'}
         </button>
 
-        <strong>{note.isCompleted ? "✨" : (note.decoration ?? "✦")}</strong>
+        <strong>{note.isCompleted ? '✨' : (note.decoration ?? '✦')}</strong>
       </div>
     </article>
-  );
+  )
 }
 
-export default StickyNote;
+export default StickyNote

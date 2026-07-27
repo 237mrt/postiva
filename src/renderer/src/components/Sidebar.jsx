@@ -6,40 +6,46 @@ function Sidebar({
   onNavigate,
   onCreateBoard,
   onSelectBoard,
-  onEditBoard,
+  onEditBoard
 }) {
   const navigationItems = [
     {
-      id: "home",
-      icon: "🏠",
-      label: "Ana Sayfa",
-      count: null,
+      id: 'home',
+      icon: '🏠',
+      label: 'Ana Sayfa',
+      count: null
     },
     {
-      id: "today",
-      icon: "📅",
-      label: "Bugün",
-      count: counts.today,
+      id: 'today',
+      icon: '📅',
+      label: 'Bugün',
+      count: counts.today
     },
     {
-      id: "upcoming",
-      icon: "⏰",
-      label: "Yaklaşanlar",
-      count: counts.upcoming,
+      id: 'overdue',
+      icon: '⚠️',
+      label: 'Gecikenler',
+      count: counts.overdue
     },
     {
-      id: "completed",
-      icon: "✅",
-      label: "Tamamlananlar",
-      count: counts.completed,
+      id: 'upcoming',
+      icon: '⏰',
+      label: 'Yaklaşanlar',
+      count: counts.upcoming
     },
     {
-      id: "trash",
-      icon: "🗑️",
-      label: "Çöp Kutusu",
-      count: counts.trash,
+      id: 'completed',
+      icon: '✅',
+      label: 'Tamamlananlar',
+      count: counts.completed
     },
-  ];
+    {
+      id: 'trash',
+      icon: '🗑️',
+      label: 'Çöp Kutusu',
+      count: counts.trash
+    }
+  ]
 
   return (
     <aside className="sidebar">
@@ -56,9 +62,7 @@ function Sidebar({
         {navigationItems.map((item) => (
           <button
             key={item.id}
-            className={`navigation-item ${
-              activeView === item.id ? "active" : ""
-            }`}
+            className={`navigation-item ${activeView === item.id ? 'active' : ''}`}
             type="button"
             onClick={() => onNavigate(item.id)}
           >
@@ -77,11 +81,7 @@ function Sidebar({
       <section className="boards-section">
         <div className="section-title">
           <h2>Panolar</h2>
-          <button
-            type="button"
-            onClick={onCreateBoard}
-            aria-label="Yeni pano oluştur"
-          >
+          <button type="button" onClick={onCreateBoard} aria-label="Yeni pano oluştur">
             +
           </button>
         </div>
@@ -90,16 +90,13 @@ function Sidebar({
             <p className="boards-empty-text">Henüz pano bulunmuyor.</p>
           ) : (
             boards.map((board) => {
-              const isActive =
-                activeView === "board" && selectedBoardId === board.id;
+              const isActive = activeView === 'board' && selectedBoardId === board.id
 
               return (
                 <div className="board-list-row" key={board.id}>
                   <button
                     type="button"
-                    className={`board-item board-item-${board.color} ${
-                      isActive ? "active" : ""
-                    }`}
+                    className={`board-item board-item-${board.color} ${isActive ? 'active' : ''}`}
                     onClick={() => onSelectBoard(board.id)}
                   >
                     <span>{board.icon}</span>
@@ -119,7 +116,7 @@ function Sidebar({
                     ✎
                   </button>
                 </div>
-              );
+              )
             })
           )}
         </div>
@@ -131,7 +128,7 @@ function Sidebar({
         <div className="speech-bubble">Notlarını unutma! ♥</div>
       </div>
     </aside>
-  );
+  )
 }
 
-export default Sidebar;
+export default Sidebar

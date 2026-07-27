@@ -3603,3 +3603,62 @@ body {
     display: none;
   }
 }
+
+/* ========================================
+   GECİKEN NOTLAR
+======================================== */
+
+.sticky-note-overdue {
+  box-shadow:
+    0 13px 25px rgba(0, 0, 0, 0.23),
+    0 0 0 2px rgba(210, 74, 92, 0.48);
+}
+
+.sticky-note-overdue::after {
+  content: "GECİKTİ";
+
+  position: absolute;
+  top: -9px;
+  right: 14px;
+
+  padding: 3px 7px;
+
+  color: #ffe3e7;
+  background: #7f3341;
+
+  border: 1px solid
+    rgba(255, 166, 180, 0.6);
+  border-radius: 5px;
+
+  font-family:
+    "Press Start 2P",
+    monospace;
+  font-size: 6px;
+  line-height: 1;
+
+  z-index: 2;
+}
+
+.due-date-badge-overdue {
+  color: #702836;
+  background: rgba(
+    255,
+    169,
+    182,
+    0.72
+  );
+
+  border-color: rgba(
+    126,
+    38,
+    54,
+    0.3
+  );
+
+  font-weight: bold;
+}
+
+.navigation-item.active
+  span:first-child {
+  transform: translateY(-1px);
+}
