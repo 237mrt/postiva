@@ -44,6 +44,12 @@ function Sidebar({
       icon: '🗑️',
       label: 'Çöp Kutusu',
       count: counts.trash
+    },
+    {
+      id: 'settings',
+      icon: '⚙️',
+      label: 'Ayarlar',
+      count: null
     }
   ]
 

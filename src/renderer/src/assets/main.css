@@ -4060,3 +4060,392 @@ body {
     width: calc(100vw - 24px);
   }
 }
+
+/* ========================================
+   AYARLAR EKRANI
+======================================== */
+
+.settings-view {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  padding: 28px 30px 40px;
+}
+
+.settings-header {
+  margin-bottom: 24px;
+}
+
+.settings-header > div {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.settings-icon {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+
+  background: rgba(164, 145, 255, 0.12);
+  border: 1px solid rgba(164, 145, 255, 0.22);
+  border-radius: 14px;
+
+  font-size: 24px;
+}
+
+.settings-header h2 {
+  margin: 0;
+
+  color: #f1edff;
+  font-family: "Press Start 2P", monospace;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.settings-header p {
+  margin: 8px 0 0;
+
+  color: #9690aa;
+  font-family: "VT323", monospace;
+  font-size: 19px;
+}
+
+.settings-content {
+  display: grid;
+  gap: 16px;
+}
+
+.settings-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  padding: 20px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(40, 39, 62, 0.92),
+      rgba(27, 27, 45, 0.92)
+    );
+
+  border: 1px solid rgba(160, 145, 230, 0.16);
+  border-radius: 16px;
+
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, 0.18);
+
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease;
+}
+
+.settings-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(169, 151, 255, 0.3);
+}
+
+.settings-card h3 {
+  margin: 0 0 7px;
+
+  color: #e7e1ff;
+  font-family: "Press Start 2P", monospace;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.settings-card p {
+  max-width: 520px;
+  margin: 0;
+
+  color: #9993ab;
+  font-family: "VT323", monospace;
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.settings-card > span {
+  display: grid;
+  flex-shrink: 0;
+
+  width: 48px;
+  height: 48px;
+
+  place-items: center;
+
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 13px;
+
+  font-size: 23px;
+}
+
+@media (max-width: 700px) {
+  .settings-view {
+    padding: 22px 18px 32px;
+  }
+
+  .settings-card {
+    align-items: flex-start;
+  }
+}
+
+
+/* ========================================
+   AYARLAR SEÇENEKLERİ
+======================================== */
+
+.settings-card-column {
+  display: block;
+}
+
+.settings-card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.settings-card-icon {
+  display: grid;
+  flex-shrink: 0;
+
+  width: 48px;
+  height: 48px;
+
+  place-items: center;
+
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 13px;
+
+  font-size: 23px;
+}
+
+.settings-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  margin-top: 18px;
+  padding-top: 18px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.settings-option > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.settings-option strong {
+  color: #ddd6f7;
+
+  font-family: "VT323", monospace;
+  font-size: 20px;
+  font-weight: normal;
+}
+
+.settings-option > div > span {
+  color: #8f899f;
+
+  font-family: "VT323", monospace;
+  font-size: 17px;
+}
+
+.settings-switch {
+  position: relative;
+
+  flex-shrink: 0;
+
+  width: 50px;
+  height: 27px;
+  padding: 0;
+
+  cursor: pointer;
+
+  background: #38364a;
+  border: 1px solid #565168;
+  border-radius: 999px;
+
+  transition:
+    background 180ms ease,
+    border-color 180ms ease;
+}
+
+.settings-switch > span {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+
+  width: 19px;
+  height: 19px;
+
+  background: #aaa4ba;
+  border-radius: 50%;
+
+  transition:
+    transform 180ms ease,
+    background 180ms ease;
+}
+
+.settings-switch.active {
+  background: rgba(145, 215, 173, 0.26);
+  border-color: #91d7ad;
+}
+
+.settings-switch.active > span {
+  background: #91d7ad;
+  transform: translateX(23px);
+}
+
+.settings-switch:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.settings-option-disabled {
+  opacity: 0.48;
+}
+
+.settings-option-disabled strong,
+.settings-option-disabled span {
+  color: #777286;
+}
+
+/* ========================================
+   BİLDİRİM SES SEVİYESİ
+======================================== */
+
+.settings-volume-option {
+  align-items: center;
+}
+
+.settings-volume-control {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 12px;
+
+  min-width: 210px;
+}
+
+.settings-volume-control input {
+  width: 150px;
+
+  cursor: pointer;
+
+  accent-color: #91d7ad;
+}
+
+.settings-volume-control input:disabled {
+  cursor: not-allowed;
+}
+
+.settings-volume-control output {
+  min-width: 45px;
+
+  color: #dcd5f6;
+
+  font-family: "VT323", monospace;
+  font-size: 20px;
+  text-align: right;
+}
+
+@media (max-width: 700px) {
+  .settings-volume-option {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .settings-volume-control {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .settings-volume-control input {
+    flex: 1;
+    width: auto;
+  }
+}
+
+/* ========================================
+   AYARLARI SIFIRLAMA
+======================================== */
+
+.settings-reset-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  padding: 18px 20px;
+
+  background: rgba(239, 165, 196, 0.04);
+  border: 1px dashed rgba(239, 165, 196, 0.2);
+  border-radius: 14px;
+}
+
+.settings-reset-section > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.settings-reset-section strong {
+  color: #e4ddf7;
+
+  font-family: "VT323", monospace;
+  font-size: 20px;
+  font-weight: normal;
+}
+
+.settings-reset-section span {
+  color: #8f899f;
+
+  font-family: "VT323", monospace;
+  font-size: 17px;
+}
+
+.settings-reset-section button {
+  flex-shrink: 0;
+
+  padding: 9px 14px;
+
+  cursor: pointer;
+
+  color: #efb4cd;
+  background: rgba(239, 165, 196, 0.08);
+
+  border: 1px solid rgba(239, 165, 196, 0.25);
+  border-radius: 9px;
+
+  font-family: "VT323", monospace;
+  font-size: 18px;
+
+  transition:
+    transform 150ms ease,
+    background 150ms ease;
+}
+
+.settings-reset-section button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  background: rgba(239, 165, 196, 0.14);
+}
+
+.settings-reset-section button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+@media (max-width: 700px) {
+  .settings-reset-section {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

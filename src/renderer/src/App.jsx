@@ -9,6 +9,7 @@ import NotesView from './components/NotesView'
 import BoardModal from './components/BoardModal'
 import ToastNotification from './components/ToastNotification'
 import notificationSound from './assets/sounds/postiva-notification.mp3'
+import SettingsView from './components/SettingsView'
 
 const normalizeSearchText = (value) => {
   return String(value ?? '')
@@ -84,6 +85,9 @@ const getDateTime = (dateValue, fallbackValue = 0) => {
 }
 
 function App() {
+  const [settings, setSettings] = useState(null)
+  const [isSettingsLoading, setIsSettingsLoading] = useState(true)
+
   const [boards, setBoards] = useState([])
 
   const [editingBoard, setEditingBoard] = useState(null)
@@ -130,6 +134,7 @@ function App() {
     loadNotes()
     loadDeletedNotes()
     loadBoards()
+    loadSettings()
   }, [])
 
   useEffect(() => {
@@ -157,7 +162,21 @@ function App() {
     }
   }, [])
 
+  useEffect(() => {
+    const audio = notificationAudioRef.current
+
+    if (!audio || !settings) {
+      return
+    }
+
+    audio.volume = Math.min(1, Math.max(0, Number(settings.notificationVolume ?? 0.45)))
+  }, [settings?.notificationVolume])
+
   const playNotificationSound = useCallback(async () => {
+    if (!settings?.notificationSoundEnabled) {
+      return
+    }
+
     const audio = notificationAudioRef.current
 
     if (!audio) {
@@ -171,10 +190,10 @@ function App() {
     } catch (error) {
       console.warn('[Postiva] Bildirim sesi oynatılamadı:', error)
     }
-  }, [])
+  }, [settings?.notificationSoundEnabled])
 
   useEffect(() => {
-    if (isLoading) {
+    if (isLoading || isSettingsLoading || !settings?.notificationsEnabled) {
       return
     }
 
@@ -265,7 +284,14 @@ function App() {
     }
 
     showDueNotifications()
-  }, [notes, currentTime, isLoading, playNotificationSound])
+  }, [
+    notes,
+    currentTime,
+    isLoading,
+    isSettingsLoading,
+    settings?.notificationsEnabled,
+    playNotificationSound
+  ])
 
   useEffect(() => {
     setToastQueue((currentQueue) =>
@@ -288,6 +314,182 @@ function App() {
   const ensureNotesApi = () => {
     if (!window.api?.notes) {
       throw new Error('Postiva dosya sistemi bağlantısı bulunamadı.')
+    }
+  }
+
+  const ensureSettingsApi = () => {
+    if (!window.api?.settings) {
+      throw new Error('Postiva ayar sistemi bağlantısı bulunamadı.')
+    }
+  }
+
+  const loadSettings = async () => {
+    setIsSettingsLoading(true)
+
+    try {
+      ensureSettingsApi()
+
+      const response = await window.api.settings.get()
+
+      const savedSettings = unwrapResponse(response)
+
+      setSettings(savedSettings)
+    } catch (error) {
+      console.error('[Postiva] Ayarlar yüklenemedi:', error)
+      setAppError(error.message)
+    } finally {
+      setIsSettingsLoading(false)
+    }
+  }
+
+  const toggleNotifications = async () => {
+    if (!settings || isSettingsLoading) {
+      return
+    }
+
+    setAppError('')
+
+    try {
+      ensureSettingsApi()
+
+      const response = await window.api.settings.update({
+        notificationsEnabled: !settings.notificationsEnabled
+      })
+
+      const updatedSettings = unwrapResponse(response)
+
+      setSettings(updatedSettings)
+
+      if (!updatedSettings.notificationsEnabled) {
+        setToastQueue([])
+      }
+    } catch (error) {
+      console.error('[Postiva] Bildirim ayarı değiştirilemedi:', error)
+      setAppError(error.message)
+    }
+  }
+
+  const toggleNotificationSound = async () => {
+    if (!settings || isSettingsLoading) {
+      return
+    }
+
+    setAppError('')
+
+    try {
+      ensureSettingsApi()
+
+      const response = await window.api.settings.update({
+        notificationSoundEnabled: !settings.notificationSoundEnabled
+      })
+
+      const updatedSettings = unwrapResponse(response)
+
+      setSettings(updatedSettings)
+    } catch (error) {
+      console.error('[Postiva] Bildirim sesi ayarı değiştirilemedi:', error)
+
+      setAppError(error.message)
+    }
+  }
+
+  const updateNotificationVolume = async (volume) => {
+    if (!settings || isSettingsLoading) {
+      return
+    }
+
+    const normalizedVolume = Math.min(1, Math.max(0, Number(volume)))
+
+    setAppError('')
+
+    try {
+      ensureSettingsApi()
+
+      const response = await window.api.settings.update({
+        notificationVolume: normalizedVolume
+      })
+
+      const updatedSettings = unwrapResponse(response)
+
+      setSettings(updatedSettings)
+    } catch (error) {
+      console.error('[Postiva] Bildirim ses seviyesi değiştirilemedi:', error)
+
+      setAppError(error.message)
+    }
+  }
+
+  const toggleMinimizeToTray = async () => {
+    if (!settings || isSettingsLoading) {
+      return
+    }
+
+    setAppError('')
+
+    try {
+      ensureSettingsApi()
+
+      const response = await window.api.settings.update({
+        minimizeToTray: !settings.minimizeToTray
+      })
+
+      const updatedSettings = unwrapResponse(response)
+
+      setSettings(updatedSettings)
+    } catch (error) {
+      console.error('[Postiva] Sistem tepsisi ayarı değiştirilemedi:', error)
+
+      setAppError(error.message)
+    }
+  }
+
+  const toggleOpenAtLogin = async () => {
+    if (!settings || isSettingsLoading) {
+      return
+    }
+
+    setAppError('')
+
+    try {
+      ensureSettingsApi()
+
+      const response = await window.api.settings.update({
+        openAtLogin: !settings.openAtLogin
+      })
+
+      const updatedSettings = unwrapResponse(response)
+
+      setSettings(updatedSettings)
+    } catch (error) {
+      console.error('[Postiva] Başlangıç ayarı değiştirilemedi:', error)
+
+      setAppError(error.message)
+    }
+  }
+
+  const resetSettings = async () => {
+    if (isSettingsLoading) {
+      return
+    }
+
+    setAppError('')
+    setIsSettingsLoading(true)
+
+    try {
+      ensureSettingsApi()
+
+      const response = await window.api.settings.reset()
+
+      const defaultSettings = unwrapResponse(response)
+
+      setSettings(defaultSettings)
+      setToastQueue([])
+    } catch (error) {
+      console.error('[Postiva] Ayarlar sıfırlanamadı:', error)
+
+      setAppError(error.message)
+    } finally {
+      setIsSettingsLoading(false)
     }
   }
 
@@ -893,7 +1095,18 @@ function App() {
           </div>
         )}
 
-        {activeView === 'trash' ? (
+        {activeView === 'settings' ? (
+          <SettingsView
+            settings={settings}
+            isLoading={isSettingsLoading}
+            onToggleNotifications={toggleNotifications}
+            onToggleNotificationSound={toggleNotificationSound}
+            onNotificationVolumeChange={updateNotificationVolume}
+            onToggleMinimizeToTray={toggleMinimizeToTray}
+            onToggleOpenAtLogin={toggleOpenAtLogin}
+            onResetSettings={resetSettings}
+          />
+        ) : activeView === 'trash' ? (
           <TrashView
             notes={filteredDeletedNotes}
             totalCount={deletedNotes.length}

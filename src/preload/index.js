@@ -1,5 +1,4 @@
 import { contextBridge, ipcRenderer } from 'electron'
-
 import { electronAPI } from '@electron-toolkit/preload'
 
 const api = {
@@ -18,6 +17,7 @@ const api = {
 
     permanentlyDelete: (noteId) => ipcRenderer.invoke('notes:permanently-delete', noteId)
   },
+
   boards: {
     list: () => ipcRenderer.invoke('boards:list'),
 
@@ -30,16 +30,23 @@ const api = {
 
   notifications: {
     show: (notificationData) => ipcRenderer.invoke('notifications:show', notificationData)
+  },
+
+  settings: {
+    get: () => ipcRenderer.invoke('settings:get'),
+
+    update: (settingsPatch) => ipcRenderer.invoke('settings:update', settingsPatch),
+
+    reset: () => ipcRenderer.invoke('settings:reset')
   }
 }
 
 if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('electron', electronAPI)
-
     contextBridge.exposeInMainWorld('api', api)
   } catch (error) {
-    console.error(error)
+    console.error('[Postiva] Preload API oluşturulamadı:', error)
   }
 } else {
   window.electron = electronAPI
