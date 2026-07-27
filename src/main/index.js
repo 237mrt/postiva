@@ -1,7 +1,7 @@
 import { app, shell, BrowserWindow, ipcMain, Menu, Tray, nativeImage } from 'electron'
-import { join } from 'path'
+
+import { join } from 'node:path'
 import { optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
 
 import NoteStore from './stores/NoteStore'
 import NoteService from './services/NoteService'
@@ -12,6 +12,7 @@ import BoardService from './services/BoardService'
 import registerBoardHandlers from './ipc/BoardHandlers'
 
 import SettingsStore, { DEFAULT_SETTINGS } from './stores/SettingsStore'
+
 import SettingsService from './services/SettingsService'
 import registerSettingsHandlers from './ipc/SettingsHandlers'
 
@@ -19,6 +20,9 @@ import registerNotificationHandlers from './ipc/NotificationHandlers'
 
 import BackupService from './services/BackupService'
 import registerBackupHandlers from './ipc/BackupHandlers'
+
+const APP_NAME = 'Postiva'
+const APP_ID = 'com.237mrt.postiva'
 
 let noteStore
 let noteService
@@ -50,6 +54,36 @@ let appSettings = {
   ...DEFAULT_SETTINGS
 }
 
+/*
+ * Geliştirme ortamında ikonlar doğrudan
+ * projenin build klasöründen okunur.
+ *
+ * Paketlenmiş uygulamada extraResources ile
+ * resources klasörüne kopyalanan dosyalar kullanılır.
+ */
+const getRuntimeAssetPath = (fileName) => {
+  if (app.isPackaged) {
+    return join(process.resourcesPath, fileName)
+  }
+
+  return join(__dirname, '../../build', fileName)
+}
+
+/*
+ * İkon yüklemeyi tek noktadan yönetir.
+ */
+const createRuntimeImage = (fileName) => {
+  const assetPath = getRuntimeAssetPath(fileName)
+
+  const image = nativeImage.createFromPath(assetPath)
+
+  if (image.isEmpty()) {
+    console.warn(`[Postiva] İkon yüklenemedi: ${assetPath}`)
+  }
+
+  return image
+}
+
 const showMainWindow = () => {
   if (!mainWindow || mainWindow.isDestroyed()) {
     createWindow()
@@ -73,20 +107,23 @@ const hideMainWindow = () => {
 }
 
 function createWindow() {
+  const windowIcon = createRuntimeImage('window-icon.png')
+
   mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
+
     show: false,
     autoHideMenuBar: true,
 
-    ...(process.platform === 'linux'
-      ? {
-          icon
-        }
-      : {}),
+    title: APP_NAME,
+    backgroundColor: '#171628',
+
+    icon: windowIcon.isEmpty() ? undefined : windowIcon,
 
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
+
       sandbox: false,
 
       /*
@@ -142,16 +179,39 @@ const createTray = () => {
     return
   }
 
-  let trayIcon = nativeImage.createFromPath(icon)
+  /*
+   * Önce özel tray ikonunu yüklemeyi deniyoruz.
+   */
+  let trayIcon = createRuntimeImage('tray-icon.png')
 
-  if (process.platform === 'win32' && !trayIcon.isEmpty()) {
+  /*
+   * Tray ikonu bulunamazsa pencere ikonunu
+   * yedek olarak kullanıyoruz.
+   */
+  if (trayIcon.isEmpty()) {
+    trayIcon = createRuntimeImage('window-icon.png')
+  }
+
+  if (trayIcon.isEmpty()) {
+    console.error('[Postiva] Sistem tepsisi oluşturulamadı: ikon bulunamadı.')
+
+    return
+  }
+
+  /*
+   * Windows sistem tepsisi küçük ikon kullandığı için
+   * 16x16 boyutuna indiriyoruz.
+   */
+  if (process.platform === 'win32') {
     trayIcon = trayIcon.resize({
       width: 16,
-      height: 16
+      height: 16,
+
+      quality: 'best'
     })
   }
 
-  tray = new Tray(trayIcon.isEmpty() ? icon : trayIcon)
+  tray = new Tray(trayIcon)
 
   const trayMenu = Menu.buildFromTemplate([
     {
@@ -176,18 +236,30 @@ const createTray = () => {
     }
   ])
 
-  tray.setToolTip('Postiva')
+  tray.setToolTip(APP_NAME)
   tray.setContextMenu(trayMenu)
 
+  /*
+   * Windows'ta tray ikonuna tek tıklayınca
+   * Postiva penceresini açar.
+   */
   tray.on('click', () => {
+    showMainWindow()
+  })
+
+  /*
+   * Diğer platformlarda çift tıklama davranışını
+   * da destekler.
+   */
+  tray.on('double-click', () => {
     showMainWindow()
   })
 }
 
 if (process.platform === 'win32') {
-  app.setName('Postiva')
+  app.setName(APP_NAME)
 
-  app.setAppUserModelId(app.isPackaged ? 'com.237mrt.postiva' : process.execPath)
+  app.setAppUserModelId(app.isPackaged ? APP_ID : process.execPath)
 }
 
 app.on('before-quit', () => {
@@ -256,7 +328,9 @@ app.whenReady().then(async () => {
   /*
    * Masaüstü bildirim sistemi
    */
-  registerNotificationHandlers()
+  registerNotificationHandlers({
+    iconPath: getRuntimeAssetPath('icon.png')
+  })
 
   /*
    * Geliştirme kısayolları

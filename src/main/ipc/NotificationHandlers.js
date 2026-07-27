@@ -1,4 +1,4 @@
-import { BrowserWindow, Notification, ipcMain } from 'electron'
+import { BrowserWindow, Notification, ipcMain, nativeImage } from 'electron'
 
 const activeNotifications = new Set()
 
@@ -17,7 +17,19 @@ const focusMainWindow = () => {
   mainWindow.focus()
 }
 
-const registerNotificationHandlers = () => {
+const registerNotificationHandlers = ({ iconPath } = {}) => {
+  /*
+   * İkonu her bildirimde tekrar okumamak için
+   * handler kurulurken yalnızca bir kere yüklüyoruz.
+   */
+  const notificationIcon = iconPath ? nativeImage.createFromPath(iconPath) : null
+
+  const hasNotificationIcon = notificationIcon && !notificationIcon.isEmpty()
+
+  if (!hasNotificationIcon) {
+    console.warn(`[Postiva] Bildirim ikonu yüklenemedi: ${iconPath ?? 'ikon yolu verilmedi'}`)
+  }
+
   ipcMain.removeHandler('notifications:show')
 
   ipcMain.handle('notifications:show', async (_event, notificationData = {}) => {
@@ -41,8 +53,19 @@ const registerNotificationHandlers = () => {
     const notification = new Notification({
       title,
       body,
+
+      icon: hasNotificationIcon ? notificationIcon : undefined,
+
       silent: Boolean(notificationData.silent),
-      timeoutType: 'default'
+
+      timeoutType: 'default',
+
+      /*
+       * Windows Bildirim Merkezi içinde
+       * Postiva bildirimlerini bir arada tutar.
+       */
+      groupId: 'postiva-reminders',
+      groupTitle: 'Postiva'
     })
 
     activeNotifications.add(notification)
