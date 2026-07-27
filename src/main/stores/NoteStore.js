@@ -286,6 +286,50 @@ class NoteStore {
       .filter(Boolean)
   }
 
+  async replaceAllNotes(notes) {
+    if (!Array.isArray(notes)) {
+      throw new Error('Geri yüklenecek notlar geçerli bir dizi değil.')
+    }
+
+    const normalizedNotes = notes.map((note) => {
+      if (!note || typeof note !== 'object' || Array.isArray(note)) {
+        throw new Error('Yedek dosyasında geçersiz bir not kaydı bulundu.')
+      }
+
+      const noteId = String(note.id ?? '').trim()
+
+      if (!noteId) {
+        throw new Error('Yedek dosyasındaki bir notun kimliği bulunmuyor.')
+      }
+
+      return this.normalizeStoredNote({
+        ...note,
+        id: noteId
+      })
+    })
+
+    const noteIds = new Set()
+
+    for (const note of normalizedNotes) {
+      if (noteIds.has(note.id)) {
+        throw new Error(`Yedek dosyasında tekrarlanan not kimliği bulundu: ${note.id}`)
+      }
+
+      noteIds.add(note.id)
+    }
+
+    const restoredData = {
+      version: 1,
+      notes: normalizedNotes
+    }
+
+    await this.writeData(restoredData)
+
+    console.log(`[Postiva] ${normalizedNotes.length} not geri yükleme için kaydedildi.`)
+
+    return normalizedNotes
+  }
+
   async backupCorruptedFile() {
     try {
       await fs.access(this.filePath)

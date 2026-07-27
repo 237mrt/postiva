@@ -239,8 +239,14 @@ app.whenReady().then(async () => {
    */
   backupService = new BackupService(noteStore, boardStore, settingsStore, app.getVersion())
 
-  registerBackupHandlers(backupService)
+  registerBackupHandlers(backupService, {
+    onBackupRestored: async (restoredSettings) => {
+      appSettings = restoredSettings
 
+      settingsService.applyOpenAtLogin(restoredSettings.openAtLogin)
+    }
+  })
+  
   /*
    * Masaüstü bildirim sistemi
    */

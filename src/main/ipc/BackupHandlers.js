@@ -1,6 +1,6 @@
 import { BrowserWindow, dialog, ipcMain } from 'electron'
 
-import { writeFile } from 'node:fs/promises'
+import { readFile, writeFile } from 'node:fs/promises'
 
 const createSuccessResponse = (data) => {
   return {
@@ -33,7 +33,7 @@ const createBackupFileName = () => {
   return `Postiva-Yedek-${year}-${month}-${day}-${hour}-${minute}.json`
 }
 
-const registerBackupHandlers = (backupService) => {
+const registerBackupHandlers = (backupService, { onBackupRestored } = {}) => {
   /*
    * Geliştirme sırasında handler'ın tekrar
    * kaydedilmesini engelliyoruz.
@@ -41,6 +41,8 @@ const registerBackupHandlers = (backupService) => {
   ipcMain.removeHandler('backup:create-data')
 
   ipcMain.removeHandler('backup:export')
+
+  ipcMain.removeHandler('backup:restore')
 
   /*
    * Yalnızca yedek nesnesini oluşturur.
@@ -111,6 +113,85 @@ const registerBackupHandlers = (backupService) => {
       })
     } catch (error) {
       console.error('[Postiva] Yedek dosyası kaydedilemedi:', error)
+
+      return createErrorResponse(error)
+    }
+  })
+
+  ipcMain.handle('backup:restore', async (event) => {
+    try {
+      const parentWindow = BrowserWindow.fromWebContents(event.sender)
+
+      const dialogOptions = {
+        title: 'Postiva yedeğini seç',
+
+        buttonLabel: 'Yedeği Aç',
+
+        properties: ['openFile'],
+
+        filters: [
+          {
+            name: 'Postiva Yedek Dosyası',
+            extensions: ['json']
+          }
+        ]
+      }
+
+      const openResult = parentWindow
+        ? await dialog.showOpenDialog(parentWindow, dialogOptions)
+        : await dialog.showOpenDialog(dialogOptions)
+
+      /*
+       * Kullanıcı seçim penceresini kapattıysa
+       * mevcut verilerde hiçbir değişiklik yapma.
+       */
+      if (openResult.canceled || openResult.filePaths.length === 0) {
+        return createSuccessResponse({
+          canceled: true,
+          restored: false
+        })
+      }
+
+      const selectedFilePath = openResult.filePaths[0]
+
+      const fileContent = await readFile(selectedFilePath, 'utf8')
+
+      let backupData
+
+      try {
+        backupData = JSON.parse(fileContent)
+      } catch {
+        throw new Error('Seçilen dosya geçerli bir JSON dosyası değil.')
+      }
+
+      /*
+       * BackupService önce yedeği doğrular,
+       * ardından notları, panoları ve ayarları
+       * güvenli şekilde geri yükler.
+       */
+      const restoredData = await backupService.restoreBackupData(backupData)
+
+      if (typeof onBackupRestored === 'function') {
+        await onBackupRestored(restoredData.settings)
+      }
+
+      console.log(`[Postiva] Yedek dosyası geri yüklendi: ${selectedFilePath}`)
+
+      return createSuccessResponse({
+        canceled: false,
+        restored: true,
+        filePath: selectedFilePath,
+
+        summary: {
+          noteCount: restoredData.notes.length,
+
+          boardCount: restoredData.boards.length
+        },
+
+        settings: restoredData.settings
+      })
+    } catch (error) {
+      console.error('[Postiva] Yedek geri yüklenemedi:', error)
 
       return createErrorResponse(error)
     }

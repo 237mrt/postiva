@@ -88,6 +88,9 @@ function App() {
   const [settings, setSettings] = useState(null)
   const [isSettingsLoading, setIsSettingsLoading] = useState(true)
 
+  const [isBackupRestoring, setIsBackupRestoring] = useState(false)
+  const [isRestoreConfirmOpen, setIsRestoreConfirmOpen] = useState(false)
+
   const [boards, setBoards] = useState([])
 
   const [editingBoard, setEditingBoard] = useState(null)
@@ -514,6 +517,91 @@ function App() {
       console.error('[Postiva] Yedek oluşturulamadı:', error)
 
       setAppError(error.message)
+    }
+  }
+
+  const requestRestoreBackup = () => {
+    if (isBackupRestoring) {
+      return
+    }
+
+    setIsRestoreConfirmOpen(true)
+  }
+
+  const cancelRestoreBackup = () => {
+    setIsRestoreConfirmOpen(false)
+  }
+
+  const confirmRestoreBackup = async () => {
+    setIsRestoreConfirmOpen(false)
+
+    await restoreBackup()
+  }
+
+  const restoreBackup = async () => {
+    if (isBackupRestoring) {
+      return
+    }
+
+    setAppError('')
+    setIsBackupRestoring(true)
+
+    try {
+      if (!window.api?.backup?.restore) {
+        throw new Error('Postiva yedek geri yükleme bağlantısı bulunamadı.')
+      }
+
+      const response = await window.api.backup.restore()
+
+      const restoreResult = unwrapResponse(response)
+
+      /*
+       * Kullanıcı dosya seçim penceresini
+       * kapattıysa işlem yapmıyoruz.
+       */
+      if (restoreResult.canceled) {
+        return
+      }
+
+      /*
+       * Eski notlara ait açık bildirimleri
+       * ve hatırlatma kayıtlarını temizliyoruz.
+       */
+      setToastQueue([])
+      sentNotificationKeys.current.clear()
+
+      /*
+       * Açık modal ve onay pencerelerini kapatıyoruz.
+       */
+      setIsNoteModalOpen(false)
+      setSelectedNote(null)
+
+      setNotePendingDelete(null)
+      setNotePendingPermanentDelete(null)
+      setBoardPendingDelete(null)
+
+      /*
+       * Yedekte mevcut olmayan bir panoda
+       * kalmamak için ana sayfaya dönüyoruz.
+       */
+      setActiveView('home')
+      setSelectedBoardId(null)
+      setSearchQuery('')
+
+      /*
+       * Ana süreç JSON dosyalarını güncelledi.
+       * Şimdi React state'lerini dosyalardan
+       * yeniden yüklüyoruz.
+       */
+      await Promise.all([loadNotes(), loadDeletedNotes(), loadBoards(), loadSettings()])
+
+      console.log('[Postiva] Yedek arayüze başarıyla yüklendi:', restoreResult.summary)
+    } catch (error) {
+      console.error('[Postiva] Yedek geri yüklenemedi:', error)
+
+      setAppError(error.message)
+    } finally {
+      setIsBackupRestoring(false)
     }
   }
 
@@ -1123,6 +1211,7 @@ function App() {
           <SettingsView
             settings={settings}
             isLoading={isSettingsLoading}
+            isBackupRestoring={isBackupRestoring}
             onToggleNotifications={toggleNotifications}
             onToggleNotificationSound={toggleNotificationSound}
             onNotificationVolumeChange={updateNotificationVolume}
@@ -1130,6 +1219,7 @@ function App() {
             onToggleOpenAtLogin={toggleOpenAtLogin}
             onResetSettings={resetSettings}
             onExportBackup={exportBackup}
+            onRestoreBackup={requestRestoreBackup}
           />
         ) : activeView === 'trash' ? (
           <TrashView
@@ -1215,6 +1305,18 @@ function App() {
           cancelText="Vazgeç"
           onConfirm={confirmDeleteNote}
           onCancel={cancelDeleteNote}
+        />
+      )}
+
+      {isRestoreConfirmOpen && (
+        <ConfirmDialog
+          title="Yedek geri yüklensin mi?"
+          message="Seçtiğin yedekteki notlar, panolar ve ayarlar mevcut Postiva verilerinin yerine geçecek."
+          hint="Geri yüklemeden önce mevcut verilerinin yedeğini oluşturman önerilir."
+          confirmText="Yedek Seç"
+          cancelText="Vazgeç"
+          onConfirm={confirmRestoreBackup}
+          onCancel={cancelRestoreBackup}
         />
       )}
 

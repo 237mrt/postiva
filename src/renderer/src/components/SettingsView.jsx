@@ -1,13 +1,15 @@
 function SettingsView({
   settings,
   isLoading = false,
+  isBackupRestoring = false,
   onToggleNotifications,
   onToggleNotificationSound,
   onNotificationVolumeChange,
   onToggleMinimizeToTray,
   onToggleOpenAtLogin,
   onResetSettings,
-  onExportBackup
+  onExportBackup,
+  onRestoreBackup
 }) {
   const notificationsEnabled = settings?.notificationsEnabled ?? true
 
@@ -197,6 +199,25 @@ function SettingsView({
               onClick={onExportBackup}
             >
               ↓ Yedek Oluştur
+            </button>
+          </div>
+
+          <div className="settings-option">
+            <div>
+              <strong>Yedeği geri yükle</strong>
+
+              <span>
+                Daha önce oluşturduğun bir Postiva yedeğini seçerek mevcut verilerin yerine yükler.
+              </span>
+            </div>
+
+            <button
+              type="button"
+              className="settings-action-button"
+              disabled={isLoading || isBackupRestoring}
+              onClick={onRestoreBackup}
+            >
+              {isBackupRestoring ? 'Geri Yükleniyor...' : '↑ Yedeği Geri Yükle'}
             </button>
           </div>
         </article>

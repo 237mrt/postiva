@@ -68,6 +68,22 @@ class SettingsStore {
     return this.getAll()
   }
 
+  async replaceAllSettings(settings) {
+    if (!settings || typeof settings !== 'object' || Array.isArray(settings)) {
+      throw new Error('Geri yüklenecek ayarlar geçerli bir nesne değil.')
+    }
+
+    const normalizedSettings = this.normalizeSettings(settings)
+
+    this.settings = normalizedSettings
+
+    await this.save()
+
+    console.log('[Postiva] Uygulama ayarları geri yükleme için kaydedildi.')
+
+    return this.getAll()
+  }
+
   normalizeSettings(settings = {}) {
     const volume = Number(settings.notificationVolume)
 

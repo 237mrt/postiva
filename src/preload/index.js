@@ -20,7 +20,9 @@ const api = {
   backup: {
     createData: () => ipcRenderer.invoke('backup:create-data'),
 
-    export: () => ipcRenderer.invoke('backup:export')
+    export: () => ipcRenderer.invoke('backup:export'),
+
+    restore: () => ipcRenderer.invoke('backup:restore')
   },
 
   boards: {
