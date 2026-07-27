@@ -17,6 +17,9 @@ import registerSettingsHandlers from './ipc/SettingsHandlers'
 
 import registerNotificationHandlers from './ipc/NotificationHandlers'
 
+import BackupService from './services/BackupService'
+import registerBackupHandlers from './ipc/BackupHandlers'
+
 let noteStore
 let noteService
 
@@ -25,6 +28,7 @@ let boardService
 
 let settingsStore
 let settingsService
+let backupService
 
 /*
  * Ana pencere ve sistem tepsisi nesnelerini
@@ -229,6 +233,13 @@ app.whenReady().then(async () => {
   boardService = new BoardService(boardStore, noteStore)
 
   registerBoardHandlers(boardService)
+
+  /*
+   * Yedekleme sistemi
+   */
+  backupService = new BackupService(noteStore, boardStore, settingsStore, app.getVersion())
+
+  registerBackupHandlers(backupService)
 
   /*
    * Masaüstü bildirim sistemi

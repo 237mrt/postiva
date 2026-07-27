@@ -17,6 +17,11 @@ const api = {
 
     permanentlyDelete: (noteId) => ipcRenderer.invoke('notes:permanently-delete', noteId)
   },
+  backup: {
+    createData: () => ipcRenderer.invoke('backup:create-data'),
+
+    export: () => ipcRenderer.invoke('backup:export')
+  },
 
   boards: {
     list: () => ipcRenderer.invoke('boards:list'),

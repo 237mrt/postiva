@@ -1,98 +1,96 @@
-import fs from "node:fs/promises";
-import path from "node:path";
-import { randomUUID } from "node:crypto";
+import fs from 'node:fs/promises'
+import path from 'node:path'
+import { randomUUID } from 'node:crypto'
 
 class NoteStore {
   constructor(userDataPath) {
-    this.dataDirectory = path.join(userDataPath, "data");
-    this.filePath = path.join(this.dataDirectory, "notes.json");
+    this.dataDirectory = path.join(userDataPath, 'data')
+    this.filePath = path.join(this.dataDirectory, 'notes.json')
 
     this.defaultData = {
       version: 1,
-      notes: [],
-    };
+      notes: []
+    }
   }
 
   async initialize() {
     await fs.mkdir(this.dataDirectory, {
-      recursive: true,
-    });
+      recursive: true
+    })
 
     try {
-      await fs.access(this.filePath);
+      await fs.access(this.filePath)
     } catch {
-      await this.writeData(this.defaultData);
+      await this.writeData(this.defaultData)
     }
 
-    const data = await this.readData();
+    const data = await this.readData()
 
-    console.log(`[Postiva] Not dosyası hazır: ${this.filePath}`);
+    console.log(`[Postiva] Not dosyası hazır: ${this.filePath}`)
 
-    return data;
+    return data
   }
 
   async readData() {
     try {
-      const fileContent = await fs.readFile(this.filePath, "utf8");
+      const fileContent = await fs.readFile(this.filePath, 'utf8')
 
-      const parsedData = JSON.parse(fileContent);
+      const parsedData = JSON.parse(fileContent)
 
       if (!Array.isArray(parsedData.notes)) {
-        throw new Error("notes alanı geçerli bir dizi değil.");
+        throw new Error('notes alanı geçerli bir dizi değil.')
       }
 
       return {
         version: parsedData.version ?? 1,
-        notes: parsedData.notes
-          .filter(Boolean)
-          .map((note) => this.normalizeStoredNote(note)),
-      };
+        notes: parsedData.notes.filter(Boolean).map((note) => this.normalizeStoredNote(note))
+      }
     } catch (error) {
-      console.error("[Postiva] Not dosyası okunamadı:", error);
+      console.error('[Postiva] Not dosyası okunamadı:', error)
 
-      await this.backupCorruptedFile();
-      await this.writeData(this.defaultData);
+      await this.backupCorruptedFile()
+      await this.writeData(this.defaultData)
 
-      return structuredClone(this.defaultData);
+      return structuredClone(this.defaultData)
     }
   }
 
   async writeData(data) {
-    const jsonContent = JSON.stringify(data, null, 2);
+    const jsonContent = JSON.stringify(data, null, 2)
 
-    await fs.writeFile(this.filePath, jsonContent, "utf8");
+    await fs.writeFile(this.filePath, jsonContent, 'utf8')
   }
 
   async getAllNotes({ includeDeleted = false } = {}) {
-    const data = await this.readData();
+    const data = await this.readData()
 
     if (includeDeleted) {
-      return data.notes;
+      return data.notes
     }
 
-    return data.notes.filter((note) => note.deletedAt === null);
+    return data.notes.filter((note) => note.deletedAt === null)
   }
 
   async getDeletedNotes() {
-    const data = await this.readData();
+    const data = await this.readData()
 
-    return data.notes.filter((note) => note.deletedAt !== null);
+    return data.notes.filter((note) => note.deletedAt !== null)
   }
 
   async getNoteById(noteId) {
-    const data = await this.readData();
+    const data = await this.readData()
 
-    return data.notes.find((note) => note.id === noteId) ?? null;
+    return data.notes.find((note) => note.id === noteId) ?? null
   }
 
   async createNote(noteData) {
-    const title = String(noteData.title ?? "").trim();
+    const title = String(noteData.title ?? '').trim()
 
     if (!title) {
-      throw new Error("Not başlığı zorunludur.");
+      throw new Error('Not başlığı zorunludur.')
     }
 
-    const now = new Date().toISOString();
+    const now = new Date().toISOString()
 
     const newNote = {
       id: randomUUID(),
@@ -101,14 +99,12 @@ class NoteStore {
       content: this.normalizeContent(noteData.content),
 
       boardId:
-        typeof noteData.boardId === "string" && noteData.boardId.trim()
-          ? noteData.boardId
-          : null,
+        typeof noteData.boardId === 'string' && noteData.boardId.trim() ? noteData.boardId : null,
 
-      color: noteData.color ?? "yellow",
-      decoration: noteData.decoration ?? "✦",
+      color: noteData.color ?? 'yellow',
+      decoration: noteData.decoration ?? '✦',
 
-      priority: noteData.priority ?? "normal",
+      priority: noteData.priority ?? 'normal',
       dueDate: noteData.dueDate ?? null,
 
       isCompleted: Boolean(noteData.isCompleted),
@@ -117,63 +113,61 @@ class NoteStore {
 
       createdAt: now,
       updatedAt: now,
-      deletedAt: null,
-    };
+      deletedAt: null
+    }
 
-    const data = await this.readData();
+    const data = await this.readData()
 
-    data.notes.push(newNote);
+    data.notes.push(newNote)
 
-    await this.writeData(data);
+    await this.writeData(data)
 
-    return newNote;
+    return newNote
   }
 
   async clearBoardFromNotes(boardId) {
-    const data = await this.readData();
-    const now = new Date().toISOString();
+    const data = await this.readData()
+    const now = new Date().toISOString()
 
-    let changedNoteCount = 0;
+    let changedNoteCount = 0
 
     data.notes = data.notes.map((note) => {
       if (note.boardId !== boardId) {
-        return note;
+        return note
       }
 
-      changedNoteCount += 1;
+      changedNoteCount += 1
 
       return {
         ...note,
         boardId: null,
-        updatedAt: now,
-      };
-    });
+        updatedAt: now
+      }
+    })
 
     if (changedNoteCount > 0) {
-      await this.writeData(data);
+      await this.writeData(data)
     }
 
-    return changedNoteCount;
+    return changedNoteCount
   }
 
   async updateNote(noteId, noteData) {
-    const data = await this.readData();
+    const data = await this.readData()
 
-    const noteIndex = data.notes.findIndex((note) => note.id === noteId);
+    const noteIndex = data.notes.findIndex((note) => note.id === noteId)
 
     if (noteIndex === -1) {
-      throw new Error("Not bulunamadı.");
+      throw new Error('Not bulunamadı.')
     }
 
-    const currentNote = data.notes[noteIndex];
+    const currentNote = data.notes[noteIndex]
 
     const updatedTitle =
-      noteData.title !== undefined
-        ? String(noteData.title).trim()
-        : currentNote.title;
+      noteData.title !== undefined ? String(noteData.title).trim() : currentNote.title
 
     if (!updatedTitle) {
-      throw new Error("Not başlığı zorunludur.");
+      throw new Error('Not başlığı zorunludur.')
     }
 
     const updatedNote = {
@@ -187,27 +181,12 @@ class NoteStore {
           : currentNote.content,
 
       color: noteData.color ?? currentNote.color,
-      priority: noteData.priority ?? currentNote.priority ?? "normal",
+      priority: noteData.priority ?? currentNote.priority ?? 'normal',
 
       boardId:
-        noteData.boardId !== undefined
-          ? noteData.boardId || null
-          : (currentNote.boardId ?? null),
+        noteData.boardId !== undefined ? noteData.boardId || null : (currentNote.boardId ?? null),
 
-      dueDate:
-        noteData.dueDate !== undefined
-          ? noteData.dueDate
-          : (currentNote.dueDate ?? null),
-
-      isCompleted:
-        noteData.isCompleted !== undefined
-          ? Boolean(noteData.isCompleted)
-          : Boolean(currentNote.isCompleted),
-
-      isPinned:
-        noteData.isPinned !== undefined
-          ? Boolean(noteData.isPinned)
-          : Boolean(currentNote.isPinned),
+      dueDate: noteData.dueDate !== undefined ? noteData.dueDate : (currentNote.dueDate ?? null),
 
       decoration: noteData.decoration ?? currentNote.decoration,
 
@@ -215,78 +194,73 @@ class NoteStore {
 
       isPinned: noteData.isPinned ?? currentNote.isPinned,
 
-      updatedAt: new Date().toISOString(),
-    };
+      updatedAt: new Date().toISOString()
+    }
 
-    data.notes[noteIndex] = updatedNote;
+    data.notes[noteIndex] = updatedNote
 
-    await this.writeData(data);
+    await this.writeData(data)
 
-    return updatedNote;
+    return updatedNote
   }
 
   async moveToTrash(noteId) {
-    return this.updateDeletedAt(noteId, new Date().toISOString());
+    return this.updateDeletedAt(noteId, new Date().toISOString())
   }
 
   async restoreNote(noteId) {
-    return this.updateDeletedAt(noteId, null);
+    return this.updateDeletedAt(noteId, null)
   }
 
   async permanentlyDeleteNote(noteId) {
-    const data = await this.readData();
+    const data = await this.readData()
 
-    const noteExists = data.notes.some((note) => note.id === noteId);
+    const noteExists = data.notes.some((note) => note.id === noteId)
 
     if (!noteExists) {
-      throw new Error("Not bulunamadı.");
+      throw new Error('Not bulunamadı.')
     }
 
-    data.notes = data.notes.filter((note) => note.id !== noteId);
+    data.notes = data.notes.filter((note) => note.id !== noteId)
 
-    await this.writeData(data);
+    await this.writeData(data)
 
-    return true;
+    return true
   }
 
   async updateDeletedAt(noteId, deletedAt) {
-    const data = await this.readData();
+    const data = await this.readData()
 
-    const noteIndex = data.notes.findIndex((note) => note.id === noteId);
+    const noteIndex = data.notes.findIndex((note) => note.id === noteId)
 
     if (noteIndex === -1) {
-      throw new Error("Not bulunamadı.");
+      throw new Error('Not bulunamadı.')
     }
 
     data.notes[noteIndex] = {
       ...data.notes[noteIndex],
       deletedAt,
-      updatedAt: new Date().toISOString(),
-    };
+      updatedAt: new Date().toISOString()
+    }
 
-    await this.writeData(data);
+    await this.writeData(data)
 
-    return data.notes[noteIndex];
+    return data.notes[noteIndex]
   }
   normalizeStoredNote(note) {
     return {
       ...note,
 
       id: String(note.id),
-      title: String(note.title ?? "Başlıksız Not"),
+      title: String(note.title ?? 'Başlıksız Not'),
       content: this.normalizeContent(note.content),
 
-      boardId:
-        typeof note.boardId === "string" && note.boardId.trim()
-          ? note.boardId
-          : null,
+      boardId: typeof note.boardId === 'string' && note.boardId.trim() ? note.boardId : null,
 
-      color: note.color ?? "yellow",
-      decoration: note.decoration ?? "✦",
+      color: note.color ?? 'yellow',
+      decoration: note.decoration ?? '✦',
 
-      priority: ["low", "normal", "high"].includes(note.priority)
-        ? note.priority
-        : "normal",
+      priority: ['low', 'normal', 'high'].includes(note.priority) ? note.priority : 'normal',
 
       dueDate: note.dueDate ?? null,
 
@@ -297,36 +271,36 @@ class NoteStore {
 
       updatedAt: note.updatedAt ?? new Date().toISOString(),
 
-      deletedAt: note.deletedAt ?? null,
-    };
+      deletedAt: note.deletedAt ?? null
+    }
   }
 
   normalizeContent(content) {
     if (Array.isArray(content)) {
-      return content.map((item) => String(item).trim()).filter(Boolean);
+      return content.map((item) => String(item).trim()).filter(Boolean)
     }
 
-    return String(content ?? "")
-      .split("\n")
+    return String(content ?? '')
+      .split('\n')
       .map((item) => item.trim())
-      .filter(Boolean);
+      .filter(Boolean)
   }
 
   async backupCorruptedFile() {
     try {
-      await fs.access(this.filePath);
+      await fs.access(this.filePath)
 
-      const backupName = `notes-corrupted-${Date.now()}.json`;
+      const backupName = `notes-corrupted-${Date.now()}.json`
 
-      const backupPath = path.join(this.dataDirectory, backupName);
+      const backupPath = path.join(this.dataDirectory, backupName)
 
-      await fs.copyFile(this.filePath, backupPath);
+      await fs.copyFile(this.filePath, backupPath)
 
-      console.warn(`[Postiva] Bozuk dosya yedeklendi: ${backupPath}`);
+      console.warn(`[Postiva] Bozuk dosya yedeklendi: ${backupPath}`)
     } catch {
       // Dosya mevcut değilse yedekleme gerekmez.
     }
   }
 }
 
-export default NoteStore;
+export default NoteStore

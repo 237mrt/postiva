@@ -6,7 +6,8 @@ function SettingsView({
   onNotificationVolumeChange,
   onToggleMinimizeToTray,
   onToggleOpenAtLogin,
-  onResetSettings
+  onResetSettings,
+  onExportBackup
 }) {
   const notificationsEnabled = settings?.notificationsEnabled ?? true
 
@@ -167,6 +168,35 @@ function SettingsView({
               onClick={onToggleOpenAtLogin}
             >
               <span />
+            </button>
+          </div>
+        </article>
+
+        <article className="settings-card settings-card-column">
+          <div className="settings-card-heading">
+            <div>
+              <h3>Veri Yedekleme</h3>
+
+              <p>Notlarını, panolarını ve uygulama ayarlarını tek bir JSON dosyasında sakla.</p>
+            </div>
+
+            <span className="settings-card-icon">💾</span>
+          </div>
+
+          <div className="settings-option">
+            <div>
+              <strong>Postiva yedeği oluştur</strong>
+
+              <span>Tüm verilerini daha sonra kullanabileceğin bir yedek dosyasına kaydeder.</span>
+            </div>
+
+            <button
+              type="button"
+              className="settings-action-button"
+              disabled={isLoading}
+              onClick={onExportBackup}
+            >
+              ↓ Yedek Oluştur
             </button>
           </div>
         </article>

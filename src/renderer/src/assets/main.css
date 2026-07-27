@@ -4449,3 +4449,37 @@ body {
     flex-direction: column;
   }
 }
+
+.settings-action-button {
+  flex-shrink: 0;
+
+  padding: 9px 15px;
+
+  cursor: pointer;
+
+  color: #d9d1ff;
+  background: rgba(164, 145, 255, 0.1);
+
+  border: 1px solid rgba(164, 145, 255, 0.28);
+  border-radius: 9px;
+
+  font-family: "VT323", monospace;
+  font-size: 18px;
+
+  transition:
+    transform 150ms ease,
+    background 150ms ease,
+    border-color 150ms ease;
+}
+
+.settings-action-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+
+  background: rgba(164, 145, 255, 0.17);
+  border-color: rgba(181, 167, 255, 0.45);
+}
+
+.settings-action-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}

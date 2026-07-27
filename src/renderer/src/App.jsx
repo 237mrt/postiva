@@ -493,6 +493,30 @@ function App() {
     }
   }
 
+  const exportBackup = async () => {
+    setAppError('')
+
+    try {
+      if (!window.api?.backup?.export) {
+        throw new Error('Postiva yedekleme sistemi bağlantısı bulunamadı.')
+      }
+
+      const response = await window.api.backup.export()
+
+      const exportResult = unwrapResponse(response)
+
+      if (exportResult.canceled) {
+        return
+      }
+
+      console.log('[Postiva] Yedek kaydedildi:', exportResult.filePath)
+    } catch (error) {
+      console.error('[Postiva] Yedek oluşturulamadı:', error)
+
+      setAppError(error.message)
+    }
+  }
+
   const loadNotes = async () => {
     setIsLoading(true)
 
@@ -1105,6 +1129,7 @@ function App() {
             onToggleMinimizeToTray={toggleMinimizeToTray}
             onToggleOpenAtLogin={toggleOpenAtLogin}
             onResetSettings={resetSettings}
+            onExportBackup={exportBackup}
           />
         ) : activeView === 'trash' ? (
           <TrashView
