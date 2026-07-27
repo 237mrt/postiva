@@ -1,44 +1,37 @@
-import { ipcMain } from "electron";
+import { ipcMain } from 'electron'
 
 function registerHandler(channel, handler) {
-  ipcMain.removeHandler(channel);
+  ipcMain.removeHandler(channel)
 
   ipcMain.handle(channel, async (_event, ...argumentsList) => {
     try {
-      const data = await handler(...argumentsList);
+      const data = await handler(...argumentsList)
 
       return {
         ok: true,
-        data,
-      };
+        data
+      }
     } catch (error) {
-      console.error(`[Postiva] ${channel} hatası:`, error);
+      console.error(`[Postiva] ${channel} hatası:`, error)
 
       return {
         ok: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : "Bilinmeyen bir hata oluştu.",
-      };
+        error: error instanceof Error ? error.message : 'Bilinmeyen bir hata oluştu.'
+      }
     }
-  });
+  })
 }
 
 function registerBoardHandlers(boardService) {
-  registerHandler("boards:list", () => boardService.getAllBoards());
+  registerHandler('boards:list', () => boardService.getAllBoards())
 
-  registerHandler("boards:create", (boardData) =>
-    boardService.createBoard(boardData),
-  );
+  registerHandler('boards:create', (boardData) => boardService.createBoard(boardData))
 
-  registerHandler("boards:update", (boardId, boardData) =>
-    boardService.updateBoard(boardId, boardData),
-  );
+  registerHandler('boards:update', (boardId, boardData) =>
+    boardService.updateBoard(boardId, boardData)
+  )
 
-  registerHandler("boards:delete", (boardId) =>
-    boardService.deleteBoard(boardId),
-  );
+  registerHandler('boards:delete', (boardId) => boardService.deleteBoard(boardId))
 }
 
-export default registerBoardHandlers;
+export default registerBoardHandlers

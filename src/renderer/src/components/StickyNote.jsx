@@ -48,7 +48,7 @@ function StickyNote({ note, currentTime, board, onEdit, onToggleComplete, onTogg
 
   const dueDateTime = note.dueDate ? new Date(note.dueDate).getTime() : null
 
-  const referenceTime = typeof currentTime === 'number' ? currentTime : Date.now()
+  const referenceTime = typeof currentTime === 'number' ? currentTime : 0
 
   const isOverdue =
     !note.isCompleted &&

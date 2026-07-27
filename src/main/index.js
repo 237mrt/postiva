@@ -244,7 +244,7 @@ app.whenReady().then(async () => {
     app.getVersion(),
     app.getPath('userData')
   )
-  
+
   registerBackupHandlers(backupService, {
     onBackupRestored: async (restoredSettings) => {
       appSettings = restoredSettings

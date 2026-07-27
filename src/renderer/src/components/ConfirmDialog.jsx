@@ -1,11 +1,11 @@
 function ConfirmDialog({
   title,
   message,
-  hint = "Bu işlemi daha sonra geri alabilirsin.",
-  confirmText = "Sil",
-  cancelText = "Vazgeç",
+  hint = 'Bu işlemi daha sonra geri alabilirsin.',
+  confirmText = 'Sil',
+  cancelText = 'Vazgeç',
   onConfirm,
-  onCancel,
+  onCancel
 }) {
   return (
     <div className="confirm-overlay" onMouseDown={onCancel}>
@@ -25,20 +25,11 @@ function ConfirmDialog({
         </div>
 
         <div className="confirm-actions">
-          <button
-            type="button"
-            className="confirm-cancel-button"
-            onClick={onCancel}
-          >
+          <button type="button" className="confirm-cancel-button" onClick={onCancel}>
             {cancelText}
           </button>
 
-          <button
-            type="button"
-            className="confirm-delete-button"
-            onClick={onConfirm}
-            autoFocus
-          >
+          <button type="button" className="confirm-delete-button" onClick={onConfirm} autoFocus>
             {confirmText}
           </button>
         </div>
@@ -50,7 +41,7 @@ function ConfirmDialog({
         </div>
       </section>
     </div>
-  );
+  )
 }
 
-export default ConfirmDialog;
+export default ConfirmDialog

@@ -1,9 +1,9 @@
 function Topbar({
   onNewNote,
   showNewNote = true,
-  searchPlaceholder = "Notlarda ara...",
-  searchQuery = "",
-  onSearchChange,
+  searchPlaceholder = 'Notlarda ara...',
+  searchQuery = '',
+  onSearchChange
 }) {
   return (
     <header className="topbar">
@@ -22,7 +22,7 @@ function Topbar({
             type="button"
             className="clear-search-button"
             aria-label="Aramayı temizle"
-            onClick={() => onSearchChange?.("")}
+            onClick={() => onSearchChange?.('')}
           >
             ×
           </button>
@@ -35,11 +35,7 @@ function Topbar({
         </button>
       )}
 
-      <button
-        className="topbar-icon"
-        type="button"
-        aria-label="Görünümü değiştir"
-      >
+      <button className="topbar-icon" type="button" aria-label="Görünümü değiştir">
         ▦
       </button>
 
@@ -47,7 +43,7 @@ function Topbar({
         ⚙
       </button>
     </header>
-  );
+  )
 }
 
-export default Topbar;
+export default Topbar

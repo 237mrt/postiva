@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, useCallback } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Sidebar from './components/Sidebar'
 import Topbar from './components/Topbar'
 import ConfirmDialog from './components/ConfirmDialog'
@@ -10,6 +10,8 @@ import BoardModal from './components/BoardModal'
 import ToastNotification from './components/ToastNotification'
 import notificationSound from './assets/sounds/postiva-notification.mp3'
 import SettingsView from './components/SettingsView'
+
+const INITIAL_CURRENT_TIME = Date.now()
 
 const normalizeSearchText = (value) => {
   return String(value ?? '')
@@ -97,7 +99,7 @@ function App() {
 
   const [editingBoard, setEditingBoard] = useState(null)
 
-  const [currentTime, setCurrentTime] = useState(Date.now())
+  const [currentTime, setCurrentTime] = useState(INITIAL_CURRENT_TIME)
 
   const sentNotificationKeys = useRef(new Set())
   const notificationAudioRef = useRef(null)
@@ -107,7 +109,8 @@ function App() {
 
   const [isBoardModalOpen, setIsBoardModalOpen] = useState(false)
 
-  const [isBoardsLoading, setIsBoardsLoading] = useState(true)
+  const [, setIsBoardsLoading] = useState(false)
+
   const [notes, setNotes] = useState([])
   const [deletedNotes, setDeletedNotes] = useState([])
 
@@ -134,13 +137,6 @@ function App() {
   const [appError, setAppError] = useState('')
 
   const activeToast = toastQueue.length > 0 ? toastQueue[0] : null
-
-  useEffect(() => {
-    loadNotes()
-    loadDeletedNotes()
-    loadBoards()
-    loadSettings()
-  }, [])
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -175,7 +171,7 @@ function App() {
     }
 
     audio.volume = Math.min(1, Math.max(0, Number(settings.notificationVolume ?? 0.45)))
-  }, [settings?.notificationVolume])
+  }, [settings])
 
   const playNotificationSound = useCallback(async () => {
     if (!settings?.notificationSoundEnabled) {
@@ -299,13 +295,18 @@ function App() {
   ])
 
   useEffect(() => {
-    setToastQueue((currentQueue) =>
-      currentQueue.filter((notification) => {
-        const currentNote = notes.find((note) => note.id === notification.note.id)
+    const cleanupTimer = window.setTimeout(() => {
+      setToastQueue((currentQueue) =>
+        currentQueue.filter((notification) => {
+          const currentNote = notes.find((note) => note.id === notification.note.id)
 
-        return currentNote && !currentNote.isCompleted
-      })
-    )
+          return currentNote && !currentNote.isCompleted
+        })
+      )
+    }, 0)
+    return () => {
+      window.clearTimeout(cleanupTimer)
+    }
   }, [notes])
 
   const unwrapResponse = (response) => {
@@ -328,7 +329,7 @@ function App() {
     }
   }
 
-  const loadSettings = async () => {
+  const loadSettings = useCallback(async () => {
     setIsSettingsLoading(true)
 
     try {
@@ -345,7 +346,7 @@ function App() {
     } finally {
       setIsSettingsLoading(false)
     }
-  }
+  }, [])
 
   const toggleNotifications = async () => {
     if (!settings || isSettingsLoading) {
@@ -626,7 +627,7 @@ function App() {
     }
   }
 
-  const loadNotes = async () => {
+  const loadNotes = useCallback(async () => {
     setIsLoading(true)
 
     try {
@@ -641,9 +642,9 @@ function App() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [])
 
-  const loadDeletedNotes = async () => {
+  const loadDeletedNotes = useCallback(async () => {
     setIsTrashLoading(true)
 
     try {
@@ -658,9 +659,9 @@ function App() {
     } finally {
       setIsTrashLoading(false)
     }
-  }
+  }, [])
 
-  const loadBoards = async () => {
+  const loadBoards = useCallback(async () => {
     setIsBoardsLoading(true)
 
     try {
@@ -680,7 +681,20 @@ function App() {
     } finally {
       setIsBoardsLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    const initializationTimer = window.setTimeout(() => {
+      loadNotes()
+      loadDeletedNotes()
+      loadBoards()
+      loadSettings()
+    }, 0)
+
+    return () => {
+      window.clearTimeout(initializationTimer)
+    }
+  }, [loadNotes, loadDeletedNotes, loadBoards, loadSettings])
 
   const todayNotes = useMemo(() => {
     return notes.filter((note) => !note.isCompleted && isSameLocalDay(note.dueDate))
@@ -746,7 +760,7 @@ function App() {
       default:
         return notes
     }
-  }, [activeView, notes, todayNotes, upcomingNotes, completedNotes, selectedBoardId])
+  }, [activeView, notes, overdueNotes, completedNotes, todayNotes, upcomingNotes, selectedBoardId])
 
   const filteredNotes = useMemo(() => {
     const searchedNotes = searchNotes(currentViewNotes, searchQuery)

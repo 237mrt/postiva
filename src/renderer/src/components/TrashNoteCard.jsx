@@ -1,32 +1,28 @@
 function TrashNoteCard({ note, onRestore, onPermanentDelete }) {
   if (!note) {
-    return null;
+    return null
   }
 
   const contentItems = Array.isArray(note.content)
     ? note.content
-    : String(note.content ?? "")
-        .split("\n")
+    : String(note.content ?? '')
+        .split('\n')
         .map((item) => item.trim())
-        .filter(Boolean);
+        .filter(Boolean)
 
   const deletedDate = note.deletedAt
-    ? new Intl.DateTimeFormat("tr-TR", {
-        dateStyle: "medium",
-        timeStyle: "short",
+    ? new Intl.DateTimeFormat('tr-TR', {
+        dateStyle: 'medium',
+        timeStyle: 'short'
       }).format(new Date(note.deletedAt))
-    : "Tarih bulunamadı";
+    : 'Tarih bulunamadı'
 
   return (
-    <article
-      className={`sticky-note sticky-note-${
-        note.color ?? "yellow"
-      } trash-note-card`}
-    >
+    <article className={`sticky-note sticky-note-${note.color ?? 'yellow'} trash-note-card`}>
       <div className="note-tape" />
 
       <div className="note-header">
-        <h3>{note.title ?? "Başlıksız Not"}</h3>
+        <h3>{note.title ?? 'Başlıksız Not'}</h3>
 
         <span className="trash-icon">🗑️</span>
       </div>
@@ -44,11 +40,7 @@ function TrashNoteCard({ note, onRestore, onPermanentDelete }) {
       <p className="trash-deleted-at">Silinme: {deletedDate}</p>
 
       <div className="trash-note-actions">
-        <button
-          type="button"
-          className="restore-note-button"
-          onClick={() => onRestore(note)}
-        >
+        <button type="button" className="restore-note-button" onClick={() => onRestore(note)}>
           ↶ Geri Yükle
         </button>
 
@@ -61,7 +53,7 @@ function TrashNoteCard({ note, onRestore, onPermanentDelete }) {
         </button>
       </div>
     </article>
-  );
+  )
 }
 
-export default TrashNoteCard;
+export default TrashNoteCard

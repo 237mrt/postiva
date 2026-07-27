@@ -1,12 +1,4 @@
-import {
-  app,
-  shell,
-  BrowserWindow,
-  ipcMain,
-  Menu,
-  Tray,
-  nativeImage
-} from 'electron'
+import { app, shell, BrowserWindow, ipcMain, Menu, Tray, nativeImage } from 'electron'
 import { join } from 'path'
 import { optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -19,9 +11,7 @@ import BoardStore from './stores/BoardStore'
 import BoardService from './services/BoardService'
 import registerBoardHandlers from './ipc/BoardHandlers'
 
-import SettingsStore, {
-  DEFAULT_SETTINGS
-} from './stores/SettingsStore'
+import SettingsStore, { DEFAULT_SETTINGS } from './stores/SettingsStore'
 import SettingsService from './services/SettingsService'
 import registerSettingsHandlers from './ipc/SettingsHandlers'
 
@@ -116,17 +106,10 @@ function createWindow() {
     }
   })
 
-  if (
-    is.dev &&
-    process.env['ELECTRON_RENDERER_URL']
-  ) {
-    mainWindow.loadURL(
-      process.env['ELECTRON_RENDERER_URL']
-    )
+  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
-    mainWindow.loadFile(
-      join(__dirname, '../renderer/index.html')
-    )
+    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
 }
 
@@ -137,21 +120,14 @@ const createTray = () => {
 
   let trayIcon = nativeImage.createFromPath(icon)
 
-  if (
-    process.platform === 'win32' &&
-    !trayIcon.isEmpty()
-  ) {
+  if (process.platform === 'win32' && !trayIcon.isEmpty()) {
     trayIcon = trayIcon.resize({
       width: 16,
       height: 16
     })
   }
 
-  tray = new Tray(
-    trayIcon.isEmpty()
-      ? icon
-      : trayIcon
-  )
+  tray = new Tray(trayIcon.isEmpty() ? icon : trayIcon)
 
   const trayMenu = Menu.buildFromTemplate([
     {
@@ -187,11 +163,7 @@ const createTray = () => {
 if (process.platform === 'win32') {
   app.setName('Postiva')
 
-  app.setAppUserModelId(
-    app.isPackaged
-      ? 'com.237mrt.postiva'
-      : process.execPath
-  )
+  app.setAppUserModelId(app.isPackaged ? 'com.237mrt.postiva' : process.execPath)
 }
 
 app.on('before-quit', () => {
@@ -202,35 +174,24 @@ app.whenReady().then(async () => {
   /*
    * Ayar sistemi
    */
-  settingsStore = new SettingsStore(
-    app.getPath('userData')
-  )
+  settingsStore = new SettingsStore(app.getPath('userData'))
 
   await settingsStore.initialize()
 
-  settingsService = new SettingsService(
-    settingsStore,
-    app
-  )
+  settingsService = new SettingsService(settingsStore, app)
 
-  appSettings =
-    await settingsService.applySavedSystemSettings()
+  appSettings = await settingsService.applySavedSystemSettings()
 
-  registerSettingsHandlers(
-    settingsService,
-    {
-      onSettingsChanged: (settings) => {
-        appSettings = settings
-      }
+  registerSettingsHandlers(settingsService, {
+    onSettingsChanged: (settings) => {
+      appSettings = settings
     }
-  )
+  })
 
   /*
    * Not sistemi
    */
-  noteStore = new NoteStore(
-    app.getPath('userData')
-  )
+  noteStore = new NoteStore(app.getPath('userData'))
 
   await noteStore.initialize()
 
@@ -241,16 +202,11 @@ app.whenReady().then(async () => {
   /*
    * Pano sistemi
    */
-  boardStore = new BoardStore(
-    app.getPath('userData')
-  )
+  boardStore = new BoardStore(app.getPath('userData'))
 
   await boardStore.initialize()
 
-  boardService = new BoardService(
-    boardStore,
-    noteStore
-  )
+  boardService = new BoardService(boardStore, noteStore)
 
   registerBoardHandlers(boardService)
 
@@ -259,12 +215,9 @@ app.whenReady().then(async () => {
    */
   registerNotificationHandlers()
 
-  app.on(
-    'browser-window-created',
-    (_, window) => {
-      optimizer.watchWindowShortcuts(window)
-    }
-  )
+  app.on('browser-window-created', (_, window) => {
+    optimizer.watchWindowShortcuts(window)
+  })
 
   ipcMain.on('ping', () => {
     console.log('pong')
@@ -279,10 +232,7 @@ app.whenReady().then(async () => {
 })
 
 app.on('window-all-closed', () => {
-  if (
-    process.platform !== 'darwin' &&
-    !appSettings.minimizeToTray
-  ) {
+  if (process.platform !== 'darwin' && !appSettings.minimizeToTray) {
     app.quit()
   }
 })

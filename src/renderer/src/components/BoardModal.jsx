@@ -1,52 +1,49 @@
-import { useState } from "react";
+import { useState } from 'react'
 
-const boardIcons = ["📌", "📘", "💼", "🚀", "💗", "💡", "🛒", "🎯", "🎨", "💻"];
+const boardIcons = ['📌', '📘', '💼', '🚀', '💗', '💡', '🛒', '🎯', '🎨', '💻']
 
 const boardColors = [
-  { value: "purple", label: "Mor" },
-  { value: "blue", label: "Mavi" },
-  { value: "green", label: "Yeşil" },
-  { value: "pink", label: "Pembe" },
-  { value: "orange", label: "Turuncu" },
-  { value: "yellow", label: "Sarı" },
-];
+  { value: 'purple', label: 'Mor' },
+  { value: 'blue', label: 'Mavi' },
+  { value: 'green', label: 'Yeşil' },
+  { value: 'pink', label: 'Pembe' },
+  { value: 'orange', label: 'Turuncu' },
+  { value: 'yellow', label: 'Sarı' }
+]
 
 function BoardModal({ board, onClose, onSave, onDelete }) {
-  const isEditMode = Boolean(board);
+  const isEditMode = Boolean(board)
 
-  const [name, setName] = useState(board?.name ?? "");
+  const [name, setName] = useState(board?.name ?? '')
 
-  const [icon, setIcon] = useState(board?.icon ?? "📌");
+  const [icon, setIcon] = useState(board?.icon ?? '📌')
 
-  const [color, setColor] = useState(board?.color ?? "purple");
+  const [color, setColor] = useState(board?.color ?? 'purple')
 
   const handleSubmit = (event) => {
-    event.preventDefault();
+    event.preventDefault()
 
-    const trimmedName = name.trim();
+    const trimmedName = name.trim()
 
     if (!trimmedName) {
-      return;
+      return
     }
 
     onSave({
       name: trimmedName,
       icon,
-      color,
-    });
-  };
+      color
+    })
+  }
 
   return (
     <div className="modal-overlay" onMouseDown={onClose}>
-      <section
-        className="note-modal board-modal"
-        onMouseDown={(event) => event.stopPropagation()}
-      >
+      <section className="note-modal board-modal" onMouseDown={(event) => event.stopPropagation()}>
         <div className="note-modal-heading">
           <div>
-            <span>{isEditMode ? "✎" : "📁"}</span>
+            <span>{isEditMode ? '✎' : '📁'}</span>
 
-            <h2>{isEditMode ? "Panoyu Düzenle" : "Yeni Pano"}</h2>
+            <h2>{isEditMode ? 'Panoyu Düzenle' : 'Yeni Pano'}</h2>
           </div>
 
           <button
@@ -83,9 +80,7 @@ function BoardModal({ board, onClose, onSave, onDelete }) {
                 <button
                   key={item}
                   type="button"
-                  className={`board-icon-option ${
-                    icon === item ? "selected" : ""
-                  }`}
+                  className={`board-icon-option ${icon === item ? 'selected' : ''}`}
                   onClick={() => setIcon(item)}
                 >
                   {item}
@@ -104,54 +99,40 @@ function BoardModal({ board, onClose, onSave, onDelete }) {
                   type="button"
                   title={item.label}
                   className={`board-color-option board-color-${item.value} ${
-                    color === item.value ? "selected" : ""
+                    color === item.value ? 'selected' : ''
                   }`}
                   onClick={() => setColor(item.value)}
                 >
-                  {color === item.value ? "✓" : ""}
+                  {color === item.value ? '✓' : ''}
                 </button>
               ))}
             </div>
           </div>
 
           <div className="board-preview">
-            <span className={`board-preview-icon board-preview-${color}`}>
-              {icon}
-            </span>
+            <span className={`board-preview-icon board-preview-${color}`}>{icon}</span>
 
             <div>
               <small>Pano önizlemesi</small>
 
-              <strong>{name.trim() || "Yeni Pano"}</strong>
+              <strong>{name.trim() || 'Yeni Pano'}</strong>
             </div>
           </div>
 
           <div className="modal-actions">
             {isEditMode && (
-              <button
-                type="button"
-                className="delete-note-button"
-                onClick={() => onDelete(board)}
-              >
+              <button type="button" className="delete-note-button" onClick={() => onDelete(board)}>
                 Panoyu Sil
               </button>
             )}
 
             <div className="modal-actions-right">
-              <button
-                type="button"
-                className="secondary-button"
-                onClick={onClose}
-              >
+              <button type="button" className="secondary-button" onClick={onClose}>
                 Vazgeç
               </button>
 
-              <button
-                type="submit"
-                className="primary-button"
-                disabled={!name.trim()}
-              >
-                {isEditMode ? "Değişiklikleri Kaydet" : "Panoyu Oluştur"}
+              <button type="submit" className="primary-button" disabled={!name.trim()}>
+                {isEditMode ? 'Değişiklikleri Kaydet' : 'Panoyu Oluştur'}
               </button>
             </div>
           </div>
@@ -166,7 +147,7 @@ function BoardModal({ board, onClose, onSave, onDelete }) {
         </div>
       </section>
     </div>
-  );
+  )
 }
 
-export default BoardModal;
+export default BoardModal

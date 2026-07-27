@@ -30,7 +30,7 @@ function ToastNotification({ notification, onClose, onOpen, onComplete }) {
     return () => {
       window.clearTimeout(timer)
     }
-  }, [notification?.key])
+  }, [notification.key, onClose])
 
   if (!note) {
     return null

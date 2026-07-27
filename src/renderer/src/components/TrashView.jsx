@@ -1,16 +1,16 @@
-import TrashNoteCard from "./TrashNoteCard";
+import TrashNoteCard from './TrashNoteCard'
 
 function TrashView({
   notes = [],
   totalCount = 0,
-  searchQuery = "",
+  searchQuery = '',
   isLoading,
   onRestore,
-  onPermanentDelete,
+  onPermanentDelete
 }) {
-  const safeNotes = Array.isArray(notes) ? notes.filter(Boolean) : [];
+  const safeNotes = Array.isArray(notes) ? notes.filter(Boolean) : []
 
-  const isSearching = Boolean(searchQuery.trim());
+  const isSearching = Boolean(searchQuery.trim())
 
   return (
     <section className="trash-view">
@@ -21,16 +21,11 @@ function TrashView({
           <div>
             <h2>Çöp Kutusu</h2>
 
-            <p>
-              Silinen notlarını geri yükleyebilir veya kalıcı olarak
-              silebilirsin.
-            </p>
+            <p>Silinen notlarını geri yükleyebilir veya kalıcı olarak silebilirsin.</p>
           </div>
         </div>
 
-        <strong>
-          {isSearching ? `${safeNotes.length} sonuç` : `${totalCount} not`}
-        </strong>
+        <strong>{isSearching ? `${safeNotes.length} sonuç` : `${totalCount} not`}</strong>
       </div>
 
       {isLoading ? (
@@ -40,14 +35,14 @@ function TrashView({
         </div>
       ) : safeNotes.length === 0 ? (
         <div className="trash-empty">
-          <span>{isSearching ? "🔍" : "✨"}</span>
+          <span>{isSearching ? '🔍' : '✨'}</span>
 
-          <h3>{isSearching ? "Sonuç bulunamadı" : "Çöp Kutusu boş"}</h3>
+          <h3>{isSearching ? 'Sonuç bulunamadı' : 'Çöp Kutusu boş'}</h3>
 
           <p>
             {isSearching
               ? `“${searchQuery}” ile eşleşen silinmiş bir not yok.`
-              : "Silinen notlar burada görünecek."}
+              : 'Silinen notlar burada görünecek.'}
           </p>
         </div>
       ) : (
@@ -63,7 +58,7 @@ function TrashView({
         </div>
       )}
     </section>
-  );
+  )
 }
 
-export default TrashView;
+export default TrashView

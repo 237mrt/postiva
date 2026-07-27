@@ -1,100 +1,93 @@
-import { useState } from "react";
+import { useState } from 'react'
 
 const noteColors = [
-  { name: "purple", label: "Mor" },
-  { name: "yellow", label: "Sarı" },
-  { name: "pink", label: "Pembe" },
-  { name: "blue", label: "Mavi" },
-  { name: "green", label: "Yeşil" },
-  { name: "orange", label: "Turuncu" },
-];
+  { name: 'purple', label: 'Mor' },
+  { name: 'yellow', label: 'Sarı' },
+  { name: 'pink', label: 'Pembe' },
+  { name: 'blue', label: 'Mavi' },
+  { name: 'green', label: 'Yeşil' },
+  { name: 'orange', label: 'Turuncu' }
+]
 
 const priorities = [
   {
-    value: "low",
-    label: "Düşük",
-    icon: "🌱",
+    value: 'low',
+    label: 'Düşük',
+    icon: '🌱'
   },
   {
-    value: "normal",
-    label: "Normal",
-    icon: "⭐",
+    value: 'normal',
+    label: 'Normal',
+    icon: '⭐'
   },
   {
-    value: "high",
-    label: "Yüksek",
-    icon: "🔥",
-  },
-];
+    value: 'high',
+    label: 'Yüksek',
+    icon: '🔥'
+  }
+]
 
 const toDateTimeLocal = (dateValue) => {
   if (!dateValue) {
-    return "";
+    return ''
   }
 
-  const date = new Date(dateValue);
+  const date = new Date(dateValue)
 
   if (Number.isNaN(date.getTime())) {
-    return "";
+    return ''
   }
 
-  const offset = date.getTimezoneOffset() * 60_000;
+  const offset = date.getTimezoneOffset() * 60_000
 
-  return new Date(date.getTime() - offset).toISOString().slice(0, 16);
-};
+  return new Date(date.getTime() - offset).toISOString().slice(0, 16)
+}
 
-function NoteModal({
-  note,
-  boards = [],
-  defaultBoardId = null,
-  onClose,
-  onSave,
-  onDelete,
-}) {
-  const isEditMode = Boolean(note);
+function NoteModal({ note, boards = [], defaultBoardId = null, onClose, onSave, onDelete }) {
+  const isEditMode = Boolean(note)
 
   const getInitialContent = () => {
     if (!note?.content) {
-      return "";
+      return ''
     }
 
     if (Array.isArray(note.content)) {
-      return note.content.join("\n");
+      return note.content.join('\n')
     }
 
-    return String(note.content);
-  };
+    return String(note.content)
+  }
 
-  const [title, setTitle] = useState(note?.title ?? "");
+  const [title, setTitle] = useState(note?.title ?? '')
 
-  const [boardId, setBoardId] = useState(note?.boardId ?? defaultBoardId ?? "");
+  const [boardId, setBoardId] = useState(note?.boardId ?? defaultBoardId ?? '')
 
-  const [content, setContent] = useState(getInitialContent);
+  const [content, setContent] = useState(getInitialContent)
 
-  const [color, setColor] = useState(note?.color ?? "yellow");
+  const [color, setColor] = useState(note?.color ?? 'yellow')
 
-  const [priority, setPriority] = useState(note?.priority ?? "normal");
+  const [priority, setPriority] = useState(note?.priority ?? 'normal')
 
-  const [dueDate, setDueDate] = useState(toDateTimeLocal(note?.dueDate));
+  const [dueDate, setDueDate] = useState(toDateTimeLocal(note?.dueDate))
 
-  const [isCompleted, setIsCompleted] = useState(Boolean(note?.isCompleted));
+  const [isCompleted, setIsCompleted] = useState(Boolean(note?.isCompleted))
 
   const handleSubmit = (event) => {
-    event.preventDefault();
+    event.preventDefault()
 
-    const trimmedTitle = title.trim();
-    const trimmedContent = content.trim();
+    const trimmedTitle = title.trim()
+    const trimmedContent = content.trim()
 
     if (!trimmedTitle) {
-      return;
+      return
     }
 
     const contentItems = trimmedContent
       ? trimmedContent
-          .split("\n")
+          .split('\n')
           .map((item) => item.trim())
           .filter(Boolean)
-      : [];
+      : []
 
     onSave({
       title: trimmedTitle,
@@ -103,29 +96,26 @@ function NoteModal({
       color,
       priority,
       dueDate: dueDate ? new Date(dueDate).toISOString() : null,
-      isCompleted,
-    });
-  };
+      isCompleted
+    })
+  }
 
   const handleDelete = () => {
     if (!note) {
-      return;
+      return
     }
 
-    onDelete(note);
-  };
+    onDelete(note)
+  }
 
   return (
     <div className="modal-overlay" onMouseDown={onClose}>
-      <section
-        className="note-modal"
-        onMouseDown={(event) => event.stopPropagation()}
-      >
+      <section className="note-modal" onMouseDown={(event) => event.stopPropagation()}>
         <div className="note-modal-heading">
           <div>
             <span>✎</span>
 
-            <h2>{isEditMode ? "Notu Düzenle" : "Yeni Not"}</h2>
+            <h2>{isEditMode ? 'Notu Düzenle' : 'Yeni Not'}</h2>
           </div>
 
           <button
@@ -195,13 +185,13 @@ function NoteModal({
                   type="button"
                   key={noteColor.name}
                   className={`color-option color-option-${noteColor.name} ${
-                    color === noteColor.name ? "selected" : ""
+                    color === noteColor.name ? 'selected' : ''
                   }`}
                   onClick={() => setColor(noteColor.name)}
                   aria-label={`${noteColor.label} not rengi`}
                   title={noteColor.label}
                 >
-                  {color === noteColor.name && "✓"}
+                  {color === noteColor.name && '✓'}
                 </button>
               ))}
             </div>
@@ -216,7 +206,7 @@ function NoteModal({
                   type="button"
                   key={item.value}
                   className={`priority-option priority-${item.value} ${
-                    priority === item.value ? "selected" : ""
+                    priority === item.value ? 'selected' : ''
                   }`}
                   onClick={() => setPriority(item.value)}
                 >
@@ -238,11 +228,7 @@ function NoteModal({
               />
 
               {dueDate && (
-                <button
-                  type="button"
-                  onClick={() => setDueDate("")}
-                  aria-label="Son tarihi kaldır"
-                >
+                <button type="button" onClick={() => setDueDate('')} aria-label="Son tarihi kaldır">
                   ×
                 </button>
               )}
@@ -256,9 +242,7 @@ function NoteModal({
               onChange={(event) => setIsCompleted(event.target.checked)}
             />
 
-            <span className="completed-checkbox-box">
-              {isCompleted ? "✓" : ""}
-            </span>
+            <span className="completed-checkbox-box">{isCompleted ? '✓' : ''}</span>
 
             <div>
               <strong>Tamamlandı</strong>
@@ -269,30 +253,18 @@ function NoteModal({
 
           <div className="modal-actions">
             {isEditMode && (
-              <button
-                type="button"
-                className="delete-note-button"
-                onClick={handleDelete}
-              >
+              <button type="button" className="delete-note-button" onClick={handleDelete}>
                 Notu Sil
               </button>
             )}
 
             <div className="modal-actions-right">
-              <button
-                type="button"
-                className="secondary-button"
-                onClick={onClose}
-              >
+              <button type="button" className="secondary-button" onClick={onClose}>
                 Vazgeç
               </button>
 
-              <button
-                type="submit"
-                className="primary-button"
-                disabled={!title.trim()}
-              >
-                {isEditMode ? "Değişiklikleri Kaydet" : "Notu Oluştur"}
+              <button type="submit" className="primary-button" disabled={!title.trim()}>
+                {isEditMode ? 'Değişiklikleri Kaydet' : 'Notu Oluştur'}
               </button>
             </div>
           </div>
@@ -307,7 +279,7 @@ function NoteModal({
         </div>
       </section>
     </div>
-  );
+  )
 }
 
-export default NoteModal;
+export default NoteModal

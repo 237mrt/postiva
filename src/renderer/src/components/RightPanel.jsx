@@ -1,49 +1,49 @@
 const formatTime = (dateValue) => {
   if (!dateValue) {
-    return "--:--";
+    return '--:--'
   }
 
-  const date = new Date(dateValue);
+  const date = new Date(dateValue)
 
   if (Number.isNaN(date.getTime())) {
-    return "--:--";
+    return '--:--'
   }
 
-  return new Intl.DateTimeFormat("tr-TR", {
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(date);
-};
+  return new Intl.DateTimeFormat('tr-TR', {
+    hour: '2-digit',
+    minute: '2-digit'
+  }).format(date)
+}
 
 const formatShortDate = (dateValue) => {
   if (!dateValue) {
-    return "";
+    return ''
   }
 
-  const date = new Date(dateValue);
+  const date = new Date(dateValue)
 
   if (Number.isNaN(date.getTime())) {
-    return "";
+    return ''
   }
 
-  return new Intl.DateTimeFormat("tr-TR", {
-    day: "2-digit",
-    month: "short",
-  }).format(date);
-};
+  return new Intl.DateTimeFormat('tr-TR', {
+    day: '2-digit',
+    month: 'short'
+  }).format(date)
+}
 
 const getPriorityIcon = (priority) => {
   switch (priority) {
-    case "high":
-      return "🔥";
+    case 'high':
+      return '🔥'
 
-    case "low":
-      return "🌱";
+    case 'low':
+      return '🌱'
 
     default:
-      return "⭐";
+      return '⭐'
   }
-};
+}
 
 function RightPanel({
   todayNotes = [],
@@ -51,15 +51,15 @@ function RightPanel({
   onEdit,
   onToggleComplete,
   onShowToday,
-  onShowUpcoming,
+  onShowUpcoming
 }) {
-  const currentDateLabel = new Intl.DateTimeFormat("tr-TR", {
-    day: "numeric",
-    month: "long",
-  }).format(new Date());
+  const currentDateLabel = new Intl.DateTimeFormat('tr-TR', {
+    day: 'numeric',
+    month: 'long'
+  }).format(new Date())
 
-  const visibleTodayNotes = todayNotes.slice(0, 5);
-  const visibleUpcomingNotes = upcomingNotes.slice(0, 4);
+  const visibleTodayNotes = todayNotes.slice(0, 5)
+  const visibleUpcomingNotes = upcomingNotes.slice(0, 4)
 
   return (
     <aside className="right-panel">
@@ -67,11 +67,7 @@ function RightPanel({
         <div className="right-panel-heading">
           <h2>Bugün</h2>
 
-          <button
-            type="button"
-            className="right-panel-link"
-            onClick={onShowToday}
-          >
+          <button type="button" className="right-panel-link" onClick={onShowToday}>
             {currentDateLabel}
           </button>
         </div>
@@ -84,30 +80,23 @@ function RightPanel({
         ) : (
           <div className="tasks">
             {visibleTodayNotes.map((note) => (
-              <div
-                className={`task ${note.isCompleted ? "task-completed" : ""}`}
-                key={note.id}
-              >
+              <div className={`task ${note.isCompleted ? 'task-completed' : ''}`} key={note.id}>
                 <button
                   type="button"
                   className="task-check-button"
                   aria-label={`${note.title} görevini tamamla`}
                   onClick={() => onToggleComplete(note)}
                 >
-                  {note.isCompleted ? "✓" : ""}
+                  {note.isCompleted ? '✓' : ''}
                 </button>
 
-                <button
-                  type="button"
-                  className="task-content-button"
-                  onClick={() => onEdit(note)}
-                >
+                <button type="button" className="task-content-button" onClick={() => onEdit(note)}>
                   <h3>{note.title}</h3>
 
                   <span>{formatTime(note.dueDate)}</span>
                 </button>
 
-                <strong title={`Öncelik: ${note.priority ?? "normal"}`}>
+                <strong title={`Öncelik: ${note.priority ?? 'normal'}`}>
                   {getPriorityIcon(note.priority)}
                 </strong>
               </div>
@@ -116,11 +105,7 @@ function RightPanel({
         )}
 
         {todayNotes.length > 5 && (
-          <button
-            type="button"
-            className="right-panel-more-button"
-            onClick={onShowToday}
-          >
+          <button type="button" className="right-panel-more-button" onClick={onShowToday}>
             +{todayNotes.length - 5} not daha
           </button>
         )}
@@ -130,11 +115,7 @@ function RightPanel({
         <div className="right-panel-heading">
           <h2>Yaklaşanlar</h2>
 
-          <button
-            type="button"
-            className="right-panel-link"
-            onClick={onShowUpcoming}
-          >
+          <button type="button" className="right-panel-link" onClick={onShowUpcoming}>
             Tümü
           </button>
         </div>
@@ -158,11 +139,11 @@ function RightPanel({
                 <h3>{note.title}</h3>
 
                 <p>
-                  {note.priority === "high"
-                    ? "Yüksek öncelik"
-                    : note.priority === "low"
-                      ? "Düşük öncelik"
-                      : "Normal öncelik"}
+                  {note.priority === 'high'
+                    ? 'Yüksek öncelik'
+                    : note.priority === 'low'
+                      ? 'Düşük öncelik'
+                      : 'Normal öncelik'}
                 </p>
               </div>
 
@@ -182,7 +163,7 @@ function RightPanel({
         </p>
       </div>
     </aside>
-  );
+  )
 }
 
-export default RightPanel;
+export default RightPanel
